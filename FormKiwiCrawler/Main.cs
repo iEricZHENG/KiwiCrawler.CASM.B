@@ -33,7 +33,7 @@
         #region 原来的文件地址
         //private static string filePath = AppDomain.CurrentDomain.BaseDirectory + @"\Files\";
         //private static string articlePath = AppDomain.CurrentDomain.BaseDirectory + @"\Articles\";
-        //private static string urlFilePath = AppDomain.CurrentDomain.BaseDirectory + @"\UrlFile\url.txt"; 
+        private static string urlFilePath = AppDomain.CurrentDomain.BaseDirectory + @"\UrlFile\url.txt";
         #endregion
         //private static ContentQueue_Kiwi fileQueue = new ContentQueue_Kiwi(); 
 
@@ -43,7 +43,7 @@
             InitializeComponent();
         }
 
-       
+
 
         /// <summary>
         /// The master data received event.
@@ -58,20 +58,19 @@
             //NSoup.Nodes.Document doc = NSoup.NSoupClient.Parse(args.Html);
 
             #region 接收数据处理，//如果有问题可以使用多线程
-            ContentQueue_Kiwi.Instance.EnQueue(args.Html);
+            DataReceivedEventArgs_Kiwi.Instance.EnQueue(args);
             ThreadPool.QueueUserWorkItem(o =>
             {
                 while (true)
                 {
                     try
                     {
-                        if (ContentQueue_Kiwi.Instance.Count > 0)
+                        if (DataReceivedEventArgs_Kiwi.Instance.Count > 0)
                         {
-                            fileId++;
-                            string fileContent = ContentQueue_Kiwi.Instance.DeQueue();
-                            if (!String.IsNullOrEmpty(fileContent)&&fileContent.Trim() != "")
+                            DataReceivedEventArgs dataReceived = DataReceivedEventArgs_Kiwi.Instance.DeQueue();
+                            if (!String.IsNullOrEmpty(dataReceived.Html) && dataReceived.Html.Trim() != "")
                             {
-                                WriteToFiles(fileContent);
+                                WriteToFiles(dataReceived);
                             }
                         }
                         else
@@ -86,6 +85,24 @@
             });
 
             #endregion 接收数据处理
+        }
+
+        private static void WriteToFiles(DataReceivedEventArgs dataReceived)
+        {
+            KiwiCrawler.BLL.Capturedata_kBll bll = new KiwiCrawler.BLL.Capturedata_kBll();
+            KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
+            model.kCaptureDateTime = DateTime.Now;
+            model.kContent = dataReceived.Html.Trim();
+            model.kType = "安全生产监督管理局";//民政部门；安全生产监督管理局；地震局
+            model.kUrl = dataReceived.Url;
+            bool OkOrNo = bll.Add(model);
+            if (OkOrNo)
+            {
+                fileId++;
+                Console.WriteLine(fileId + ":" + OkOrNo.ToString());
+            }
+
+
         }
         #region 超链接提取的主要接口
 
@@ -162,8 +179,8 @@
             {
                 filter.Add(args.Url);
                 #region 持久化URL
-                //Console.WriteLine(args.Url);
-                //File.AppendAllText(urlFilePath, args.Url + "\r\n"); 
+                // Console.WriteLine(args.Url);
+                File.AppendAllText(urlFilePath, args.Url + "\r\n");
                 #endregion
                 return true;
             }
@@ -174,15 +191,25 @@
         #region 自定义代码
         private void btnRun_Click(object sender, EventArgs e)
         {
+            var master = SetCrawler();
+            master.Crawl();
+        }
+
+        private static CrawlMaster SetCrawler()
+        {
             filter = new BloomFilter<string>(200000);
             //const string CityName = "beijing";
 
             // 设置种子地址
-            //Settings.SeedsAddress.Add(string.Format("http://jobs.zhaopin.com/{0}", CityName));//
-            //Settings.SeedsAddress.Add("http://news.sdau.edu.cn/list.php?pid=3"); sdau
-            Settings.SeedsAddress.Add("http://www.shdrc.gov.cn/gcxm/sub1.jsp?lb=001001");
-            //Settings.SeedsAddress.Add("http://beijing.anjuke.com/sale/?from=navigation");
-            //Settings.SeedsAddress.Add("   ");
+            //Settings.SeedsAddress.Add(string.Format("http://jobs.zhaopin.com/{0}", CityName));//招聘
+            //Settings.SeedsAddress.Add("http://news.sdau.edu.cn/list.php?pid=3"); 山农大
+            //Settings.SeedsAddress.Add("http://sxmwr.gov.cn/sxmwr-xxgk-dfkj-1-list-351");//陕西OK 1766+59=1825
+            //Settings.SeedsAddress.Add("http://www.zsblr.gov.cn/mlx/tdsc/tdzpgxxgg/");//舟山OK 349+18=367
+            //Settings.SeedsAddress.Add("http://www.bjmzj.gov.cn/templet/mzj/ShowMoreArticle.jsp?CLASS_ID=tzgg");//北京市民政部门--官网有异常
+            //Settings.SeedsAddress.Add("http://www.shmzj.gov.cn/gb/shmzj/node4/node10/n2435/index.html");//上海民政局--67个时报异常
+            //Settings.SeedsAddress.Add("http://www.bjdzj.gov.cn/manage/html/402881ff1ee8d7a7011ee8da76040001/zqzq/index.html");//北京市地震局--93个退出
+            Settings.SeedsAddress.Add("http://www.bjsafety.gov.cn/accidentinfor/sgkb/index.html?nav=20&sub=0");//北京安监局OK 100+5=105
+            //Settings.SeedsAddress.Add("http://beijing.anjuke.com/sale/?from=navigation");//北京安居客
             // 设置 URL 关键字
             //Settings.HrefKeywords.Add(string.Format("/{0}/bj", CityName));
             //Settings.HrefKeywords.Add(string.Format("/{0}/sj", CityName));
@@ -191,13 +218,13 @@
             Settings.ThreadCount = 1;
 
             // 设置爬取深度
-            Settings.Depth = 59;//页码数+1
+            Settings.Depth = 100;//页码数+1
 
             // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
             Settings.EscapeLinks.Add(".jpg");
 
             // 设置自动限速，1~5 秒随机间隔的自动限速
-            Settings.AutoSpeedLimit = false;
+            Settings.AutoSpeedLimit = true;
 
             // 设置都是锁定域名,去除二级域名后，判断域名是否相等，相等则认为是同一个站点
             // 例如：mail.pzcast.com 和 www.pzcast.com
@@ -217,7 +244,7 @@
             master.DataReceivedEvent += MasterDataReceivedEvent;
             // master.CustomParseLinkEvent2 += Master_CustomParseLinkEvent2;
             master.CustomParseLinkEvent3 += Master_CustomParseLinkEvent3;
-            master.Crawl();
+            return master;
         }
         /// <summary>
         /// 文件提取
@@ -250,22 +277,49 @@
             CustomParseLink_MainList(args, "(view).+?([0-9]{5})");//去除,下一步，拼写一个大的正则表达式就好
             CustomParseLink_NextPageSdau(args, "<a .+ href='(.+)'>下一页</a>", 1);//添加，下一步，拼写一个大的正则表达式就好
             */
-            //去除,下一步，拼写一个大的正则表达式就好
-            CustomParseLink_MainList(args, @"detail1.jsp.*id=\d*");
-            //添加，下一步，拼写一个大的正则表达式就好
-            CustomParseLink_NextPageSdau(args, @"<A .*HREF=(.+) class.*>\s*下一页</A>", 1);
+            #region 北京安全监督局
+            CustomParseLink_MainList(args, "/accidentinfor/sgkb/[\\d\\w]{32}\\.html");//什么都不匹配
+            CustomParseLink_NextPageSdau(args, "<a href= (index_\\d+.html) >下一页</a>", 1);//下一页             
+            #endregion
+            #region 北京市地震局
+            //CustomParseLink_MainList(args, "今天天气好晴朗，又是刮风又是下雨");//什么都不匹配
+            //CustomParseLink_NextPageSdau(args, "•<A href=\"(/manage/html/[\\d\\w]{32}/_content/\\d{2}_\\d{2}/\\d{2}/\\d+\\.html)\"", 1);//详细页
+            //CustomParseLink_NextPageSdau(args, "<a href=\"(index_\\d+.html)\">下一页</a>", 1);//下一页 
+            #endregion
+            #region 上海民政
+            ////去除(保留符合正则的),下一步，拼写一个大的正则表达式就好
+            //CustomParseLink_MainList(args, @"/gb/shmzj/node4/node\d+/n\d{4}/u1ai\d{5}.html");
+            ////添加，下一步，拼写一个大的正则表达式就好
+            //CustomParseLink_NextPageSdau(args, "<a HREF=\"(/gb\\shmzj/node4/node\\d+/n\\d{4}/index\\d+\\.html)\" class=next>下一页</a>", 1); //<a href="(List.action\?[\w\d&=]+)">下一页</a>  
+            #endregion
+            #region 陕西
+
+            ////去除,下一步，拼写一个大的正则表达式就好
+            //CustomParseLink_MainList(args, @"xg-xxgk-gk-[\d|-]+");//xg-xxgk-gk-[\d|-]+
+            ////添加，下一步，拼写一个大的正则表达式就好
+            //CustomParseLink_NextPageSdau(args, "<a href=\"(List.action\\?[\\w\\d&=]+)\">下一页</a>", 1); //<a href="(List.action\?[\w\d&=]+)">下一页</a> 
+            #endregion
+            #region 上海
+            ////去除,下一步，拼写一个大的正则表达式就好
+            //CustomParseLink_MainList(args, @"detail1.jsp.*id=\d*");
+            ////添加，下一步，拼写一个大的正则表达式就好
+            //CustomParseLink_NextPageSdau(args, @"<A .*HREF=(.+) class.*>\s*下一页</A>", 1); 
+            #endregion
+            #region 安居客
             //CustomParseLink_MainList(args, "http://beijing.anjuke.com/prop/view/.*commsearch_p");
             //CustomParseLink_NextPageSdau(args, "<a href='(.+)' class='aNxt'>下一页 &gt;</a>", 1);
-            //CustomParseLink_NextPageSdau(args, "http://beijing.anjuke.com/prop/view/.*commsearch_p", 0);
+            //CustomParseLink_NextPageSdau(args, "http://beijing.anjuke.com/prop/view/.*commsearch_p", 0); 
+            #endregion
         }
         #endregion
 
         private void btnAccessDB_Click(object sender, EventArgs e)
         {
             KiwiCrawler.BLL.Capturedata_kBll bll = new KiwiCrawler.BLL.Capturedata_kBll();
-
+            KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
+            MessageBox.Show(bll.GetRecordCount("").ToString());
         }
-      
+
 
     }
 }
