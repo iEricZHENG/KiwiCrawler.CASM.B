@@ -37,6 +37,8 @@ namespace KiwiCrawler.Web.Capturedata_k
 		this.txtkContent.Text=model.kContent;
 		this.txtkType.Text=model.kType;
 		this.txtkCaptureDateTime.Text=model.kCaptureDateTime.ToString();
+		this.txtkNumber.Text=model.kNumber.ToString();
+		this.txtkNotes.Text=model.kNotes;
 
 	}
 
@@ -60,6 +62,14 @@ namespace KiwiCrawler.Web.Capturedata_k
 			{
 				strErr+="kCaptureDateTime格式错误！\\n";	
 			}
+			if(!PageValidate.IsNumber(txtkNumber.Text))
+			{
+				strErr+="kNumber格式错误！\\n";	
+			}
+			if(this.txtkNotes.Text.Trim().Length==0)
+			{
+				strErr+="kNotes不能为空！\\n";	
+			}
 
 			if(strErr!="")
 			{
@@ -71,6 +81,8 @@ namespace KiwiCrawler.Web.Capturedata_k
 			string kContent=this.txtkContent.Text;
 			string kType=this.txtkType.Text;
 			DateTime kCaptureDateTime=DateTime.Parse(this.txtkCaptureDateTime.Text);
+			int kNumber=int.Parse(this.txtkNumber.Text);
+			string kNotes=this.txtkNotes.Text;
 
 
 			KiwiCrawler.Model.Capturedata_k model=new KiwiCrawler.Model.Capturedata_k();
@@ -79,6 +91,8 @@ namespace KiwiCrawler.Web.Capturedata_k
 			model.kContent=kContent;
 			model.kType=kType;
 			model.kCaptureDateTime=kCaptureDateTime;
+			model.kNumber=kNumber;
+			model.kNotes=kNotes;
 
 			KiwiCrawler.BLL.Capturedata_kBll bll=new KiwiCrawler.BLL.Capturedata_kBll();
 			bll.Update(model);

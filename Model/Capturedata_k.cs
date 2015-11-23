@@ -15,6 +15,8 @@ namespace KiwiCrawler.Model
 		private string _kcontent;
 		private string _ktype;
 		private DateTime _kcapturedatetime;
+		private int? _knumber;
+		private string _knotes;
 		/// <summary>
 		/// auto_increment
 		/// </summary>
@@ -54,6 +56,22 @@ namespace KiwiCrawler.Model
 		{
 			set{ _kcapturedatetime=value;}
 			get{return _kcapturedatetime;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public int? kNumber
+		{
+			set{ _knumber=value;}
+			get{return _knumber;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string kNotes
+		{
+			set{ _knotes=value;}
+			get{return _knotes;}
 		}
 		#endregion Model
 

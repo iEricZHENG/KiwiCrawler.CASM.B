@@ -45,6 +45,8 @@
 		<asp:BoundField DataField="kContent" HeaderText="kContent" SortExpression="kContent" ItemStyle-HorizontalAlign="Center"  /> 
 		<asp:BoundField DataField="kType" HeaderText="kType" SortExpression="kType" ItemStyle-HorizontalAlign="Center"  /> 
 		<asp:BoundField DataField="kCaptureDateTime" HeaderText="kCaptureDateTime" SortExpression="kCaptureDateTime" ItemStyle-HorizontalAlign="Center"  /> 
+		<asp:BoundField DataField="kNumber" HeaderText="kNumber" SortExpression="kNumber" ItemStyle-HorizontalAlign="Center"  /> 
+		<asp:BoundField DataField="kNotes" HeaderText="kNotes" SortExpression="kNotes" ItemStyle-HorizontalAlign="Center"  /> 
                             
                             <asp:HyperLinkField HeaderText="详细" ControlStyle-Width="50" DataNavigateUrlFields="kId" DataNavigateUrlFormatString="Show.aspx?id={0}"
                                 Text="详细"  />

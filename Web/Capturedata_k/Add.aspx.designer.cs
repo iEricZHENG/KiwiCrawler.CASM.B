@@ -23,6 +23,8 @@ namespace KiwiCrawler.Web.Capturedata_k {
 		protected global::System.Web.UI.WebControls.TextBox txtkContent;
 		protected global::System.Web.UI.WebControls.TextBox txtkType;
 		protected global::System.Web.UI.WebControls.TextBox txtkCaptureDateTime;
+		protected global::System.Web.UI.WebControls.TextBox txtkNumber;
+		protected global::System.Web.UI.WebControls.TextBox txtkNotes;
 	protected global::System.Web.UI.WebControls.Button btnSave;
 	protected global::System.Web.UI.WebControls.Button btnCancel;
 

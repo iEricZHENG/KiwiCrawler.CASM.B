@@ -36,6 +36,8 @@ namespace KiwiCrawler.Web.Capturedata_k
 		this.lblkContent.Text=model.kContent;
 		this.lblkType.Text=model.kType;
 		this.lblkCaptureDateTime.Text=model.kCaptureDateTime.ToString();
+		this.lblkNumber.Text=model.kNumber.ToString();
+		this.lblkNotes.Text=model.kNotes;
 
 	}
 

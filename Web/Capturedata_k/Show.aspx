@@ -42,6 +42,20 @@
 	<td height="25" width="*" align="left">
 		<asp:Label id="lblkCaptureDateTime" runat="server"></asp:Label>
 	</td></tr>
+	<tr>
+	<td height="25" width="30%" align="right">
+		kNumber
+	：</td>
+	<td height="25" width="*" align="left">
+		<asp:Label id="lblkNumber" runat="server"></asp:Label>
+	</td></tr>
+	<tr>
+	<td height="25" width="30%" align="right">
+		kNotes
+	：</td>
+	<td height="25" width="*" align="left">
+		<asp:Label id="lblkNotes" runat="server"></asp:Label>
+	</td></tr>
 </table>
 
                     </td>

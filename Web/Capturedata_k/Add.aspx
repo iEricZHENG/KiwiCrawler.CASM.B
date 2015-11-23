@@ -37,6 +37,20 @@
 	<td height="25" width="*" align="left">
 		<asp:TextBox ID="txtkCaptureDateTime" runat="server" Width="70px"  onfocus="setday(this)"></asp:TextBox>
 	</td></tr>
+	<tr>
+	<td height="25" width="30%" align="right">
+		kNumber
+	：</td>
+	<td height="25" width="*" align="left">
+		<asp:TextBox id="txtkNumber" runat="server" Width="200px"></asp:TextBox>
+	</td></tr>
+	<tr>
+	<td height="25" width="30%" align="right">
+		kNotes
+	：</td>
+	<td height="25" width="*" align="left">
+		<asp:TextBox id="txtkNotes" runat="server" Width="200px"></asp:TextBox>
+	</td></tr>
 </table>
 <script src="/js/calendar1.js" type="text/javascript"></script>
 

@@ -22,6 +22,8 @@ namespace KiwiCrawler.Web.Capturedata_k {
 	protected global::System.Web.UI.WebControls.Label lblkContent;
 	protected global::System.Web.UI.WebControls.Label lblkType;
 	protected global::System.Web.UI.WebControls.Label lblkCaptureDateTime;
+	protected global::System.Web.UI.WebControls.Label lblkNumber;
+	protected global::System.Web.UI.WebControls.Label lblkNotes;
 
 
        

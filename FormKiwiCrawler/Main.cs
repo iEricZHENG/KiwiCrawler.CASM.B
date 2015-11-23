@@ -1,7 +1,9 @@
 ﻿namespace FormKiwiCrawler
 {
     using Crawler.Core;
+    using KiwiCrawler.BLL;
     using KiwiCrawler.Core;
+    using KiwiCrawler.Model;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -201,6 +203,7 @@
             //const string CityName = "beijing";
 
             // 设置种子地址
+            #region 设置种子地址
             //Settings.SeedsAddress.Add(string.Format("http://jobs.zhaopin.com/{0}", CityName));//招聘
             //Settings.SeedsAddress.Add("http://news.sdau.edu.cn/list.php?pid=3"); 山农大
             //Settings.SeedsAddress.Add("http://sxmwr.gov.cn/sxmwr-xxgk-dfkj-1-list-351");//陕西OK 1766+59=1825
@@ -208,11 +211,13 @@
             //Settings.SeedsAddress.Add("http://www.bjmzj.gov.cn/templet/mzj/ShowMoreArticle.jsp?CLASS_ID=tzgg");//北京市民政部门--官网有异常
             //Settings.SeedsAddress.Add("http://www.shmzj.gov.cn/gb/shmzj/node4/node10/n2435/index.html");//上海民政局--67个时报异常
             //Settings.SeedsAddress.Add("http://www.bjdzj.gov.cn/manage/html/402881ff1ee8d7a7011ee8da76040001/zqzq/index.html");//北京市地震局--93个退出
-            Settings.SeedsAddress.Add("http://www.bjsafety.gov.cn/accidentinfor/sgkb/index.html?nav=20&sub=0");//北京安监局OK 100+5=105
-            //Settings.SeedsAddress.Add("http://beijing.anjuke.com/sale/?from=navigation");//北京安居客
+            //Settings.SeedsAddress.Add("http://www.bjsafety.gov.cn/accidentinfor/sgkb/index.html?nav=20&sub=0");//北京安监局OK 100+5=105
+            //Settings.SeedsAddress.Add("http://beijing.anjuke.com/sale/?from=navigation");//北京安居客 
+            #endregion
+            //Settings.SeedsAddress.Add(config.kUrl);
             // 设置 URL 关键字
             //Settings.HrefKeywords.Add(string.Format("/{0}/bj", CityName));
-            //Settings.HrefKeywords.Add(string.Format("/{0}/sj", CityName));
+            //config对象里的kKeyWord属性跟这里的URL关键字不是一回事
 
             // 设置爬取线程个数
             Settings.ThreadCount = 1;
@@ -317,9 +322,168 @@
         {
             KiwiCrawler.BLL.Capturedata_kBll bll = new KiwiCrawler.BLL.Capturedata_kBll();
             KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
-            MessageBox.Show(bll.GetRecordCount("").ToString());
+            MessageBox.Show(bll.GetMaxId().ToString());
+
         }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        {
+            TabPage focusPage = e.TabPage;
+            switch (focusPage.Text)
+            {
+                case "任务抓取":
+                    dgvTaskCapture.Rows.Clear();
+                    Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+                    List<Urlconfigs_k> urlList = null;
+                    urlList = urlBll.GetModelList("");
+                    //dataGridView1.DataSource = urlList;
+                    //ListToDataGridView(dgvTaskCapture,headerTitle,urlList);
+                    ListToDataGridView(dgvTaskCapture, urlList);
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void ListToDataGridView(DataGridView dgv, List<KiwiCrawler.Model.Urlconfigs_k> list)
+        {
+            if (list != null)
+            {
+                foreach (Urlconfigs_k model in list)
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.CreateCells(dgv);
+                    #region 添加CheckCell
+
+                    //添加CheckCell
+                    //DataGridViewCheckBoxCell checkCell = new DataGridViewCheckBoxCell();
+                    //row.Cells[0] = checkCell;
+                    //row.Cells[1].Value = model.kId;
+                    //row.Cells[2].Value = model.kUrl;
+                    //row.Cells[3].Value = model.kPageTotal;
+                    //row.Cells[4].Value = model.kCaptureType;
+                    //row.Cells[5].Value = model.kDetailPattern;
+                    //row.Cells[6].Value = model.kDetailPatternType;
+                    //row.Cells[7].Value = model.kNextPagePattern;
+                    //row.Cells[8].Value = model.kNextPagePatternType;
+                    //row.Cells[9].Value = model.kComplateDegree;
+                    //row.Cells[10].Value = model.kAddressBusinessType;
+                    //row.Cells[11].Value = model.kKeyWords;
+                    //row.Cells[12].Value = "抓取"; 
+                    #endregion
+                    row.Cells[0].Value = model.kId;
+                    row.Cells[1].Value = model.kUrl;
+                    row.Cells[2].Value = model.kPageTotal;
+                    row.Cells[3].Value = model.kCaptureType;
+                    row.Cells[4].Value = model.kDetailPattern;
+                    row.Cells[5].Value = model.kDetailPatternType;
+                    row.Cells[6].Value = model.kNextPagePattern;
+                    row.Cells[7].Value = model.kNextPagePatternType;
+                    row.Cells[8].Value = model.kComplateDegree;
+                    row.Cells[9].Value = model.kAddressBusinessType;
+                    row.Cells[10].Value = model.kKeyWords;
+                    row.Cells[11].Value = "抓取";
+                    dgv.Rows.Add(row);
+                }
+            }
+
+
+        }
+
+        private void dgvTaskCapture_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            #region 控制CheckCell
+
+            //if (e.ColumnIndex == 0)
+            //{
+            //    DataGridViewCheckBoxCell checkCell = (DataGridViewCheckBoxCell)dgvTaskCapture.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            //    if (checkCell.Value==null)
+            //    {
+            //        checkCell.Value = true;
+            //    }
+            //    else
+            //    {
+            //        checkCell.Value = !(Boolean)checkCell.Value;
+            //    }
+
+            //} 
+            #endregion
+            if (e.ColumnIndex == 11)
+            {
+                //获得id
+                //dgvTaskCapture.Rows[e.RowIndex].Cells[0].Value.ToString()                
+            }
+
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            frmAdd frmAdd_k = new frmAdd();
+            //frmAdd_k.ShowDialog();
+            if (frmAdd_k.ShowDialog(this) == DialogResult.Cancel)
+            {
+                //为了保证一致性，不在内存中读对象。
+                //KiwiCrawler.Model.Urlconfigs_k urlConfigFrmMode = frmAdd_k.urlFrmMode_k;
+                dgvTaskCapture.Rows.Clear();
+                Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+                List<Urlconfigs_k> urlList = null;
+                urlList = urlBll.GetModelList("");//后期改成分页的          
+                ListToDataGridView(dgvTaskCapture, urlList);
+            }
+
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            //获得Row里的值
+            KiwiCrawler.Model.Urlconfigs_k model = new Urlconfigs_k();
+            model.kId = Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[0].Value.ToString().Trim());
+            model.kUrl = dgvTaskCapture.SelectedRows[0].Cells[1].Value.ToString().Trim();
+            model.kPageTotal = dgvTaskCapture.SelectedRows[0].Cells[2].Value == null ? null : (int?)Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[2].Value);
+            model.kCaptureType = dgvTaskCapture.SelectedRows[0].Cells[3].Value.ToString().Trim();
+            model.kDetailPattern = dgvTaskCapture.SelectedRows[0].Cells[4].Value.ToString();
+            model.kDetailPatternType = dgvTaskCapture.SelectedRows[0].Cells[5].Value.ToString().Trim();
+            model.kNextPagePattern = dgvTaskCapture.SelectedRows[0].Cells[6].Value.ToString();
+            model.kNextPagePatternType = dgvTaskCapture.SelectedRows[0].Cells[7].Value.ToString().Trim();
+            model.kComplateDegree = dgvTaskCapture.SelectedRows[0].Cells[8].Value == null ? null : (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value);
+            model.kAddressBusinessType = dgvTaskCapture.SelectedRows[0].Cells[9].Value.ToString();
+            model.kKeyWords = dgvTaskCapture.SelectedRows[0].Cells[10].Value.ToString().Trim();
+
+            frmEdit frmEdit_k = new frmEdit(model);
+            if (frmEdit_k.ShowDialog(this) == DialogResult.Cancel)
+            {
+                dgvTaskCapture.Rows.Clear();
+                Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+                List<Urlconfigs_k> urlList = null;
+                urlList = urlBll.GetModelList("");//后期改成分页的          
+                ListToDataGridView(dgvTaskCapture, urlList);
+            }
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+            urlBll.Delete(Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[0].Value));//id是自动生成的，应该不会有错
+            //刷新
+            dgvTaskCapture.Rows.Clear();
+            List<Urlconfigs_k> urlList = null;
+            urlList = urlBll.GetModelList("");//后期改成分页的            
+            ListToDataGridView(dgvTaskCapture, urlList);
+
+        }
+
+
 
 
     }
 }
+;
