@@ -51,6 +51,18 @@
             this.kKeyWords = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.kBtnCapture = new System.Windows.Forms.DataGridViewButtonColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.radioThreadC = new System.Windows.Forms.RadioButton();
+            this.radioThreadM = new System.Windows.Forms.RadioButton();
+            this.txtThread = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioDepthC = new System.Windows.Forms.RadioButton();
+            this.txtDepth = new System.Windows.Forms.TextBox();
+            this.radioDepthM = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioSpeedNo = new System.Windows.Forms.RadioButton();
+            this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.btnComplate = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -64,6 +76,11 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTaskCapture)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -83,6 +100,7 @@
             this.tabControl1.Size = new System.Drawing.Size(1229, 554);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
+            //this.tabControl1.Deselected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Deselected);
             // 
             // tabPage1
             // 
@@ -294,6 +312,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -301,6 +320,137 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "爬虫配置";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.groupBox4);
+            this.groupBox3.Controls.Add(this.groupBox1);
+            this.groupBox3.Controls.Add(this.groupBox2);
+            this.groupBox3.Location = new System.Drawing.Point(411, 115);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(323, 387);
+            this.groupBox3.TabIndex = 9;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "爬虫配置";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.radioThreadC);
+            this.groupBox4.Controls.Add(this.radioThreadM);
+            this.groupBox4.Controls.Add(this.txtThread);
+            this.groupBox4.Location = new System.Drawing.Point(24, 45);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(275, 84);
+            this.groupBox4.TabIndex = 10;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "线程数";
+            // 
+            // radioThreadC
+            // 
+            this.radioThreadC.AutoSize = true;
+            this.radioThreadC.Location = new System.Drawing.Point(23, 52);
+            this.radioThreadC.Name = "radioThreadC";
+            this.radioThreadC.Size = new System.Drawing.Size(59, 16);
+            this.radioThreadC.TabIndex = 4;
+            this.radioThreadC.Text = "自定义";
+            this.radioThreadC.UseVisualStyleBackColor = true;
+            // 
+            // radioThreadM
+            // 
+            this.radioThreadM.AutoSize = true;
+            this.radioThreadM.Checked = true;
+            this.radioThreadM.Location = new System.Drawing.Point(23, 30);
+            this.radioThreadM.Name = "radioThreadM";
+            this.radioThreadM.Size = new System.Drawing.Size(65, 16);
+            this.radioThreadM.TabIndex = 7;
+            this.radioThreadM.TabStop = true;
+            this.radioThreadM.Text = "1(默认)";
+            this.radioThreadM.UseVisualStyleBackColor = true;
+            this.radioThreadM.CheckedChanged += new System.EventHandler(this.radioThreadM_CheckedChanged);
+            // 
+            // txtThread
+            // 
+            this.txtThread.Enabled = false;
+            this.txtThread.Location = new System.Drawing.Point(109, 51);
+            this.txtThread.Name = "txtThread";
+            this.txtThread.Size = new System.Drawing.Size(100, 21);
+            this.txtThread.TabIndex = 6;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioDepthC);
+            this.groupBox1.Controls.Add(this.txtDepth);
+            this.groupBox1.Controls.Add(this.radioDepthM);
+            this.groupBox1.Location = new System.Drawing.Point(24, 152);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(275, 113);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "爬取深度";
+            // 
+            // radioDepthC
+            // 
+            this.radioDepthC.AutoSize = true;
+            this.radioDepthC.Location = new System.Drawing.Point(21, 70);
+            this.radioDepthC.Name = "radioDepthC";
+            this.radioDepthC.Size = new System.Drawing.Size(59, 16);
+            this.radioDepthC.TabIndex = 1;
+            this.radioDepthC.Text = "自定义";
+            this.radioDepthC.UseVisualStyleBackColor = true;
+            // 
+            // txtDepth
+            // 
+            this.txtDepth.Enabled = false;
+            this.txtDepth.Location = new System.Drawing.Point(101, 65);
+            this.txtDepth.Name = "txtDepth";
+            this.txtDepth.Size = new System.Drawing.Size(100, 21);
+            this.txtDepth.TabIndex = 3;
+            // 
+            // radioDepthM
+            // 
+            this.radioDepthM.AutoSize = true;
+            this.radioDepthM.Checked = true;
+            this.radioDepthM.Location = new System.Drawing.Point(21, 30);
+            this.radioDepthM.Name = "radioDepthM";
+            this.radioDepthM.Size = new System.Drawing.Size(47, 16);
+            this.radioDepthM.TabIndex = 0;
+            this.radioDepthM.TabStop = true;
+            this.radioDepthM.Text = "默认";
+            this.radioDepthM.UseVisualStyleBackColor = true;
+            this.radioDepthM.CheckedChanged += new System.EventHandler(this.radioDepthM_CheckedChanged);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radioSpeedNo);
+            this.groupBox2.Controls.Add(this.radioSpeedYes);
+            this.groupBox2.Location = new System.Drawing.Point(24, 283);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(275, 55);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "自动限速";
+            // 
+            // radioSpeedNo
+            // 
+            this.radioSpeedNo.AutoSize = true;
+            this.radioSpeedNo.Location = new System.Drawing.Point(166, 30);
+            this.radioSpeedNo.Name = "radioSpeedNo";
+            this.radioSpeedNo.Size = new System.Drawing.Size(35, 16);
+            this.radioSpeedNo.TabIndex = 1;
+            this.radioSpeedNo.Text = "否";
+            this.radioSpeedNo.UseVisualStyleBackColor = true;
+            // 
+            // radioSpeedYes
+            // 
+            this.radioSpeedYes.AutoSize = true;
+            this.radioSpeedYes.Checked = true;
+            this.radioSpeedYes.Location = new System.Drawing.Point(21, 30);
+            this.radioSpeedYes.Name = "radioSpeedYes";
+            this.radioSpeedYes.Size = new System.Drawing.Size(83, 16);
+            this.radioSpeedYes.TabIndex = 0;
+            this.radioSpeedYes.TabStop = true;
+            this.radioSpeedYes.Text = "是（默认）";
+            this.radioSpeedYes.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
@@ -376,6 +526,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTaskCapture)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
@@ -414,6 +572,18 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn kAddressBusinessType;
         private System.Windows.Forms.DataGridViewTextBoxColumn kKeyWords;
         private System.Windows.Forms.DataGridViewButtonColumn kBtnCapture;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioDepthC;
+        private System.Windows.Forms.TextBox txtDepth;
+        private System.Windows.Forms.RadioButton radioDepthM;
+        private System.Windows.Forms.TextBox txtThread;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton radioSpeedNo;
+        private System.Windows.Forms.RadioButton radioSpeedYes;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton radioThreadC;
+        private System.Windows.Forms.RadioButton radioThreadM;
 
     }
 }

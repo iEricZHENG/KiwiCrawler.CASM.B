@@ -24,7 +24,10 @@
         /// The settings.
         /// </summary>
         private static readonly CrawlSettings Settings = new CrawlSettings();
-
+        private static KiwiCrawler.Model.Urlconfigs_k configModel = new Urlconfigs_k();
+        //private static  String detailRegStr = "";
+        //private static  string nextPageStr = "";
+        
         /// <summary>
         /// The filter.
         /// 关于使用 Bloom 算法去除重复 URL：http://www.cnblogs.com/heaad/archive/2011/01/02/1924195.html
@@ -95,14 +98,18 @@
             KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
             model.kCaptureDateTime = DateTime.Now;
             model.kContent = dataReceived.Html.Trim();
-            model.kType = "安全生产监督管理局";//民政部门；安全生产监督管理局；地震局
+            model.kType = configModel.kAddressBusinessType.Trim();//民政部门；安全生产监督管理局；地震局
             model.kUrl = dataReceived.Url;
-            bool OkOrNo = bll.Add(model);
-            if (OkOrNo)
-            {
-                fileId++;
-                Console.WriteLine(fileId + ":" + OkOrNo.ToString());
-            }
+            fileId++;
+            model.kNumber = fileId;
+            model.kNotes = configModel.kKeyWords;
+            bll.Add(model);
+            //bool OkOrNo = bll.Add(model);
+            //if (OkOrNo)
+            //{
+            //    fileId++;
+            //    Console.WriteLine(fileId + ":" + OkOrNo.ToString());
+            //}
 
 
         }
@@ -193,57 +200,13 @@
         #region 自定义代码
         private void btnRun_Click(object sender, EventArgs e)
         {
-            var master = SetCrawler();
-            master.Crawl();
+           
         }
 
         private static CrawlMaster SetCrawler()
         {
-            filter = new BloomFilter<string>(200000);
-            //const string CityName = "beijing";
-
-            // 设置种子地址
-            #region 设置种子地址
-            //Settings.SeedsAddress.Add(string.Format("http://jobs.zhaopin.com/{0}", CityName));//招聘
-            //Settings.SeedsAddress.Add("http://news.sdau.edu.cn/list.php?pid=3"); 山农大
-            //Settings.SeedsAddress.Add("http://sxmwr.gov.cn/sxmwr-xxgk-dfkj-1-list-351");//陕西OK 1766+59=1825
-            //Settings.SeedsAddress.Add("http://www.zsblr.gov.cn/mlx/tdsc/tdzpgxxgg/");//舟山OK 349+18=367
-            //Settings.SeedsAddress.Add("http://www.bjmzj.gov.cn/templet/mzj/ShowMoreArticle.jsp?CLASS_ID=tzgg");//北京市民政部门--官网有异常
-            //Settings.SeedsAddress.Add("http://www.shmzj.gov.cn/gb/shmzj/node4/node10/n2435/index.html");//上海民政局--67个时报异常
-            //Settings.SeedsAddress.Add("http://www.bjdzj.gov.cn/manage/html/402881ff1ee8d7a7011ee8da76040001/zqzq/index.html");//北京市地震局--93个退出
-            //Settings.SeedsAddress.Add("http://www.bjsafety.gov.cn/accidentinfor/sgkb/index.html?nav=20&sub=0");//北京安监局OK 100+5=105
-            //Settings.SeedsAddress.Add("http://beijing.anjuke.com/sale/?from=navigation");//北京安居客 
-            #endregion
-            //Settings.SeedsAddress.Add(config.kUrl);
-            // 设置 URL 关键字
-            //Settings.HrefKeywords.Add(string.Format("/{0}/bj", CityName));
-            //config对象里的kKeyWord属性跟这里的URL关键字不是一回事
-
-            // 设置爬取线程个数
-            Settings.ThreadCount = 1;
-
-            // 设置爬取深度
-            Settings.Depth = 100;//页码数+1
-
-            // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
-            Settings.EscapeLinks.Add(".jpg");
-
-            // 设置自动限速，1~5 秒随机间隔的自动限速
-            Settings.AutoSpeedLimit = true;
-
-            // 设置都是锁定域名,去除二级域名后，判断域名是否相等，相等则认为是同一个站点
-            // 例如：mail.pzcast.com 和 www.pzcast.com
-            Settings.LockHost = false;
-
-            // 设置请求的 User-Agent HTTP 标头的值
-            // settings.UserAgent 已提供默认值，如有特殊需求则自行设置
-
-            // 设置请求页面的超时时间，默认值 15000 毫秒
-            // settings.Timeout 按照自己的要求确定超时时间
-
-            // 设置用于过滤的正则表达式
-            //Settings.RegularFilterExpressions.Add("<a .+ href='(.+)'>下一页</a>");//  string strReg = "<a .+ href='(.+)'>下一页</a>";
-
+            //SettingDefaultValues();
+            //SettingCustomValues();
             var master = new CrawlMaster(Settings);
             master.AddUrlEvent += MasterAddUrlEvent;
             master.DataReceivedEvent += MasterDataReceivedEvent;
@@ -283,8 +246,8 @@
             CustomParseLink_NextPageSdau(args, "<a .+ href='(.+)'>下一页</a>", 1);//添加，下一步，拼写一个大的正则表达式就好
             */
             #region 北京安全监督局
-            CustomParseLink_MainList(args, "/accidentinfor/sgkb/[\\d\\w]{32}\\.html");//什么都不匹配
-            CustomParseLink_NextPageSdau(args, "<a href= (index_\\d+.html) >下一页</a>", 1);//下一页             
+            CustomParseLink_MainList(args, configModel.kDetailPattern);//什么都不匹配
+            CustomParseLink_NextPageSdau(args, configModel.kNextPagePattern, 1);//下一页             
             #endregion
             #region 北京市地震局
             //CustomParseLink_MainList(args, "今天天气好晴朗，又是刮风又是下雨");//什么都不匹配
@@ -415,7 +378,15 @@
             if (e.ColumnIndex == 11)
             {
                 //获得id
-                //dgvTaskCapture.Rows[e.RowIndex].Cells[0].Value.ToString()                
+                //dgvTaskCapture.Rows[e.RowIndex].Cells[0].Value.ToString()           
+
+                if (SettingCustomValues())
+                {
+                   // SetCrawler();
+                    var master = SetCrawler();
+                    master.Crawl();    
+                }               
+                
             }
 
         }
@@ -440,6 +411,21 @@
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             //获得Row里的值
+            KiwiCrawler.Model.Urlconfigs_k model = GetModelByRow();
+
+            frmEdit frmEdit_k = new frmEdit(model);
+            if (frmEdit_k.ShowDialog(this) == DialogResult.Cancel)
+            {
+                dgvTaskCapture.Rows.Clear();
+                Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+                List<Urlconfigs_k> urlList = null;
+                urlList = urlBll.GetModelList("");//后期改成分页的          
+                ListToDataGridView(dgvTaskCapture, urlList);
+            }
+        }
+
+        private Urlconfigs_k GetModelByRow()
+        {
             KiwiCrawler.Model.Urlconfigs_k model = new Urlconfigs_k();
             model.kId = Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[0].Value.ToString().Trim());
             model.kUrl = dgvTaskCapture.SelectedRows[0].Cells[1].Value.ToString().Trim();
@@ -452,16 +438,7 @@
             model.kComplateDegree = dgvTaskCapture.SelectedRows[0].Cells[8].Value == null ? null : (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value);
             model.kAddressBusinessType = dgvTaskCapture.SelectedRows[0].Cells[9].Value.ToString();
             model.kKeyWords = dgvTaskCapture.SelectedRows[0].Cells[10].Value.ToString().Trim();
-
-            frmEdit frmEdit_k = new frmEdit(model);
-            if (frmEdit_k.ShowDialog(this) == DialogResult.Cancel)
-            {
-                dgvTaskCapture.Rows.Clear();
-                Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
-                List<Urlconfigs_k> urlList = null;
-                urlList = urlBll.GetModelList("");//后期改成分页的          
-                ListToDataGridView(dgvTaskCapture, urlList);
-            }
+            return model;
         }
         /// <summary>
         /// 删除
@@ -480,6 +457,159 @@
             ListToDataGridView(dgvTaskCapture, urlList);
 
         }
+
+        private void radioThreadM_CheckedChanged(object sender, EventArgs e)
+        {
+            txtThread.Enabled = !radioThreadM.Checked;
+        }
+
+        private void radioDepthM_CheckedChanged(object sender, EventArgs e)
+        {
+            txtDepth.Enabled = !radioDepthM.Checked;
+        }
+
+        //private void tabControl1_Deselected(object sender, TabControlEventArgs e)
+        //{
+
+        //    SettingDefaultValues();
+        //    TabPage focusPage = e.TabPage;
+        //    if (focusPage.Text == "爬虫配置")
+        //    {
+        //        SettingCustomValues();
+
+        //    }
+        //}
+
+        private bool SettingCustomValues()
+        {
+            bool isOk = true;
+            configModel = GetModelByRow();
+            //爬虫配置
+            filter = new BloomFilter<string>(200000);
+            //线程
+            if (radioThreadC.Checked && !(String.IsNullOrEmpty(txtThread.Text.Trim())))
+            {
+                Settings.ThreadCount = Convert.ToByte(txtThread.Text.Trim());
+            }
+            if (radioThreadM.Checked)
+            {
+                Settings.ThreadCount = 1;
+            }
+            //深度
+            if (radioDepthC.Checked && !(String.IsNullOrEmpty(txtDepth.Text.Trim())))
+            {
+                Settings.Depth = Convert.ToByte(txtDepth.Text.Trim());
+            }
+            if (radioDepthM.Checked)
+            {
+                Settings.Depth = configModel.kPageTotal == null ? Convert.ToByte(100) : Convert.ToByte(configModel.kPageTotal + 1);
+            }
+            //速度1~5
+            if (radioSpeedNo.Checked)
+            {
+                Settings.AutoSpeedLimit = false;
+            }
+            if (radioSpeedYes.Checked)
+            {
+                Settings.AutoSpeedLimit = true;
+            }
+            if (string.IsNullOrEmpty(configModel.kUrl))
+            {
+                isOk = false;
+                MessageBox.Show("种子地址为空");
+            }
+            else
+            {
+                Settings.SeedsAddress.Add(configModel.kUrl);
+            }            
+            // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
+            Settings.EscapeLinks.Add(".jpg");
+            // 设置 URL 关键字
+            // Settings.HrefKeywords.Add(string.Format("/{0}/bj", CityName));
+            // 设置都是锁定域名,去除二级域名后，判断域名是否相等，相等则认为是同一个站点
+            // 例如：mail.pzcast.com 和 www.pzcast.com
+            Settings.LockHost = false;
+            //URL配置
+            // 设置请求的 User-Agent HTTP 标头的值
+            // settings.UserAgent 已提供默认值，如有特殊需求则自行设置
+
+            // 设置请求页面的超时时间，默认值 15000 毫秒
+            // settings.Timeout 按照自己的要求确定超时时间
+
+            // 设置用于过滤的正则表达式
+            //Settings.RegularFilterExpressions.Add("<a .+ href='(.+)'>下一页</a>");//  string strReg = "<a .+ href='(.+)'>下一页</a>";
+
+            if (configModel.kDetailPatternType == "正则表达式")
+            {
+                if (string.IsNullOrEmpty(configModel.kDetailPattern))
+                {
+                    isOk = false;
+                    MessageBox.Show("详细页提取模板为空");
+                }
+                //else
+                //{
+                //    detailRegStr = model.kDetailPattern;
+                //}
+                
+            }
+            if (configModel.kNextPagePatternType == "正则表达式")
+            {
+                if (string.IsNullOrEmpty(configModel.kNextPagePattern))
+                {
+                    isOk = false;
+                    MessageBox.Show("下一页提取模板为空");
+                }
+                //else
+                //{
+                //    nextPageStr = model.kNextPagePattern;    
+                //}                
+            }
+            return isOk;
+            
+            
+        }
+
+        private static void SettingDefaultValues()
+        {
+            filter = new BloomFilter<string>(200000);
+            //const string CityName = "beijing";
+
+            // 设置种子地址
+            #region 设置种子地址
+            //Settings.SeedsAddress.Add(string.Format("http://jobs.zhaopin.com/{0}", CityName));//招聘
+            //Settings.SeedsAddress.Add("http://news.sdau.edu.cn/list.php?pid=3"); 山农大
+            //Settings.SeedsAddress.Add("http://sxmwr.gov.cn/sxmwr-xxgk-dfkj-1-list-351");//陕西OK 1766+59=1825
+            //Settings.SeedsAddress.Add("http://www.zsblr.gov.cn/mlx/tdsc/tdzpgxxgg/");//舟山OK 349+18=367
+            //Settings.SeedsAddress.Add("http://www.bjmzj.gov.cn/templet/mzj/ShowMoreArticle.jsp?CLASS_ID=tzgg");//北京市民政部门--官网有异常
+            //Settings.SeedsAddress.Add("http://www.shmzj.gov.cn/gb/shmzj/node4/node10/n2435/index.html");//上海民政局--67个时报异常
+            //Settings.SeedsAddress.Add("http://www.bjdzj.gov.cn/manage/html/402881ff1ee8d7a7011ee8da76040001/zqzq/index.html");//北京市地震局--93个退出
+            //Settings.SeedsAddress.Add("http://www.bjsafety.gov.cn/accidentinfor/sgkb/index.html?nav=20&sub=0");//北京安监局OK 100+5=105
+            //Settings.SeedsAddress.Add("http://beijing.anjuke.com/sale/?from=navigation");//北京安居客 
+            #endregion
+            //Settings.SeedsAddress.Add(config.kUrl);
+            // 设置 URL 关键字
+            //Settings.HrefKeywords.Add(string.Format("/{0}/bj", CityName));
+            //config对象里的kKeyWord属性跟这里的URL关键字不是一回事
+
+            // 设置爬取线程个数
+            Settings.ThreadCount = 1;
+
+            // 设置爬取深度
+            Settings.Depth = 100;//页码数+1
+
+            // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
+            Settings.EscapeLinks.Add(".jpg");
+
+            // 设置自动限速，1~5 秒随机间隔的自动限速
+            Settings.AutoSpeedLimit = true;
+
+            // 设置都是锁定域名,去除二级域名后，判断域名是否相等，相等则认为是同一个站点
+            // 例如：mail.pzcast.com 和 www.pzcast.com
+            Settings.LockHost = false;
+
+
+        }
+
 
 
 
