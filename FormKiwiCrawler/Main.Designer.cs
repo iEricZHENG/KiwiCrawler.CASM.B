@@ -66,9 +66,9 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.btnComplate = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.btnAccessDB = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.btnAccessDB = new System.Windows.Forms.Button();
+
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -100,7 +100,6 @@
             this.tabControl1.Size = new System.Drawing.Size(1229, 554);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Selected);
-            //this.tabControl1.Deselected += new System.Windows.Forms.TabControlEventHandler(this.tabControl1_Deselected);
             // 
             // tabPage1
             // 
@@ -473,26 +472,17 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.btnAccessDB);
+
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(1221, 528);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "开发测试";
+            this.tabPage4.Text = "抓取日志";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // btnAccessDB
-            // 
-            this.btnAccessDB.Location = new System.Drawing.Point(378, 14);
-            this.btnAccessDB.Name = "btnAccessDB";
-            this.btnAccessDB.Size = new System.Drawing.Size(81, 23);
-            this.btnAccessDB.TabIndex = 2;
-            this.btnAccessDB.Text = "测试连接";
-            this.btnAccessDB.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.listView1);
+            this.tabPage5.Controls.Add(this.btnAccessDB);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
@@ -501,14 +491,14 @@
             this.tabPage5.Text = "开发测试2";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // listView1
+            // btnAccessDB
             // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.Location = new System.Drawing.Point(3, 3);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(1215, 522);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.btnAccessDB.Location = new System.Drawing.Point(435, 79);
+            this.btnAccessDB.Name = "btnAccessDB";
+            this.btnAccessDB.Size = new System.Drawing.Size(81, 23);
+            this.btnAccessDB.TabIndex = 3;
+            this.btnAccessDB.Text = "测试连接";
+            this.btnAccessDB.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -517,8 +507,7 @@
             this.ClientSize = new System.Drawing.Size(1229, 554);
             this.Controls.Add(this.tabControl1);
             this.Name = "Main";
-            this.Text = "KiwiCrawler-1";
-            this.Load += new System.EventHandler(this.Main_Load);
+            this.Text = "KiwiCrawler-1";            
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -556,9 +545,7 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnComplate;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Button btnAccessDB;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.DataGridView dgvTaskCapture;
         private System.Windows.Forms.DataGridViewTextBoxColumn kId;
         private System.Windows.Forms.DataGridViewTextBoxColumn kUrl;
@@ -584,7 +571,8 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.RadioButton radioThreadC;
         private System.Windows.Forms.RadioButton radioThreadM;
-
+        
+        private System.Windows.Forms.Button btnAccessDB;
     }
 }
 

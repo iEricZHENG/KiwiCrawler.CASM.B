@@ -121,6 +121,14 @@ namespace KiwiCrawler.Core
         /// </summary>
         public CrawlSettings Settings { get; private set; }
 
+        public bool[] ThreadStatus
+        {
+            get
+            {
+                return threadStatus;
+            }
+        }
+
         #endregion Public Properties
 
         #region Public Methods and Operators
@@ -135,7 +143,7 @@ namespace KiwiCrawler.Core
             for (int i = 0; i < this.threads.Length; i++)
             {
                 this.threads[i].Start(i);
-                this.threadStatus[i] = false;
+                this.ThreadStatus[i] = false;
             }
         }
 
@@ -189,8 +197,8 @@ namespace KiwiCrawler.Core
                 // 根据队列中的 Url 数量和空闲线程的数量，判断线程是睡眠还是退出
                 if (UrlQueue.Instance.Count == 0)
                 {
-                    this.threadStatus[currentThreadIndex] = true;
-                    if (!this.threadStatus.Any(t => t == false))
+                    this.ThreadStatus[currentThreadIndex] = true;
+                    if (!this.ThreadStatus.Any(t => t == false))
                     {
                         break;
                     }
@@ -199,7 +207,7 @@ namespace KiwiCrawler.Core
                     continue;
                 }
 
-                this.threadStatus[currentThreadIndex] = false;
+                this.ThreadStatus[currentThreadIndex] = false;
 
                 if (UrlQueue.Instance.Count == 0)
                 {
