@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAdd));
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.txtPageNum = new System.Windows.Forms.TextBox();
             this.cbCaptureType = new System.Windows.Forms.ComboBox();
@@ -128,6 +129,7 @@
             // cbDetailPatternType
             // 
             this.cbDetailPatternType.Cursor = System.Windows.Forms.Cursors.Default;
+            this.cbDetailPatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDetailPatternType.FormattingEnabled = true;
             this.cbDetailPatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -138,7 +140,6 @@
             this.cbDetailPatternType.Name = "cbDetailPatternType";
             this.cbDetailPatternType.Size = new System.Drawing.Size(114, 20);
             this.cbDetailPatternType.TabIndex = 12;
-            this.cbDetailPatternType.Text = "正则表达式";
             // 
             // groupBox1
             // 
@@ -195,6 +196,7 @@
             // cbNextPagePatternType
             // 
             this.cbNextPagePatternType.Cursor = System.Windows.Forms.Cursors.Default;
+            this.cbNextPagePatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNextPagePatternType.FormattingEnabled = true;
             this.cbNextPagePatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -205,7 +207,6 @@
             this.cbNextPagePatternType.Name = "cbNextPagePatternType";
             this.cbNextPagePatternType.Size = new System.Drawing.Size(114, 20);
             this.cbNextPagePatternType.TabIndex = 12;
-            this.cbNextPagePatternType.Text = "正则表达式";
             // 
             // label7
             // 
@@ -276,8 +277,10 @@
             this.Controls.Add(this.cbCaptureType);
             this.Controls.Add(this.txtPageNum);
             this.Controls.Add(this.txtUrl);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmAdd";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "添加URL";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

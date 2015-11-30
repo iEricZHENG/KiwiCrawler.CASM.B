@@ -28,14 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.btnKillCurrentTask = new System.Windows.Forms.Button();
+            this.btnComplate = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnRun = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.dgvTaskCapture = new System.Windows.Forms.DataGridView();
             this.kId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -63,12 +64,12 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.radioSpeedNo = new System.Windows.Forms.RadioButton();
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.btnComplate = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.btnAccessDB = new System.Windows.Forms.Button();
-
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -81,16 +82,14 @@
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -122,11 +121,10 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.btnKillCurrentTask);
+            this.splitContainer2.Panel1.Controls.Add(this.btnComplate);
             this.splitContainer2.Panel1.Controls.Add(this.btnDelete);
             this.splitContainer2.Panel1.Controls.Add(this.btnUpdate);
-            this.splitContainer2.Panel1.Controls.Add(this.button2);
-            this.splitContainer2.Panel1.Controls.Add(this.button1);
-            this.splitContainer2.Panel1.Controls.Add(this.btnRun);
             this.splitContainer2.Panel1.Controls.Add(this.btnAdd);
             // 
             // splitContainer2.Panel2
@@ -135,6 +133,26 @@
             this.splitContainer2.Size = new System.Drawing.Size(1215, 522);
             this.splitContainer2.SplitterDistance = 33;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // btnKillCurrentTask
+            // 
+            this.btnKillCurrentTask.Location = new System.Drawing.Point(251, 7);
+            this.btnKillCurrentTask.Name = "btnKillCurrentTask";
+            this.btnKillCurrentTask.Size = new System.Drawing.Size(88, 23);
+            this.btnKillCurrentTask.TabIndex = 10;
+            this.btnKillCurrentTask.Text = "结束当前任务";
+            this.btnKillCurrentTask.UseVisualStyleBackColor = true;
+            this.btnKillCurrentTask.Visible = false;
+            // 
+            // btnComplate
+            // 
+            this.btnComplate.Location = new System.Drawing.Point(654, 5);
+            this.btnComplate.Name = "btnComplate";
+            this.btnComplate.Size = new System.Drawing.Size(81, 23);
+            this.btnComplate.TabIndex = 9;
+            this.btnComplate.Text = "计算完成度";
+            this.btnComplate.UseVisualStyleBackColor = true;
+            this.btnComplate.Click += new System.EventHandler(this.btnComplate_Click);
             // 
             // btnDelete
             // 
@@ -152,36 +170,9 @@
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(55, 23);
             this.btnUpdate.TabIndex = 6;
-            this.btnUpdate.Text = "修改";
+            this.btnUpdate.Text = "编辑";
             this.btnUpdate.UseVisualStyleBackColor = true;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(410, 5);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(55, 23);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "导出";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(334, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(55, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "导入";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // btnRun
-            // 
-            this.btnRun.Location = new System.Drawing.Point(649, 5);
-            this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(75, 23);
-            this.btnRun.TabIndex = 0;
-            this.btnRun.Text = "批量抓取";
-            this.btnRun.UseVisualStyleBackColor = true;
             // 
             // btnAdd
             // 
@@ -451,28 +442,8 @@
             this.radioSpeedYes.Text = "是（默认）";
             this.radioSpeedYes.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.btnComplate);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1221, 528);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "完成度计算";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // btnComplate
-            // 
-            this.btnComplate.Location = new System.Drawing.Point(687, 24);
-            this.btnComplate.Name = "btnComplate";
-            this.btnComplate.Size = new System.Drawing.Size(81, 23);
-            this.btnComplate.TabIndex = 3;
-            this.btnComplate.Text = "计算完成度";
-            this.btnComplate.UseVisualStyleBackColor = true;
-            // 
             // tabPage4
             // 
-
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(1221, 528);
@@ -482,6 +453,8 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.pictureBox1);
+            this.tabPage5.Controls.Add(this.button1);
             this.tabPage5.Controls.Add(this.btnAccessDB);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
@@ -490,6 +463,24 @@
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "开发测试2";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(530, 227);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(53, 23);
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(308, 227);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnAccessDB
             // 
@@ -500,14 +491,20 @@
             this.btnAccessDB.Text = "测试连接";
             this.btnAccessDB.UseVisualStyleBackColor = true;
             // 
+            // timer
+            // 
+            this.timer.Interval = 2000;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1229, 554);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
-            this.Text = "KiwiCrawler-1";            
+            this.Text = "KiwiCrawler-1";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -523,9 +520,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -537,13 +533,8 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnUpdate;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button btnRun;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button btnComplate;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.DataGridView dgvTaskCapture;
@@ -573,6 +564,11 @@
         private System.Windows.Forms.RadioButton radioThreadM;
         
         private System.Windows.Forms.Button btnAccessDB;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnComplate;
+        private System.Windows.Forms.Button btnKillCurrentTask;
+        private System.Windows.Forms.Timer timer;
     }
 }
 

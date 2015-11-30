@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEdit));
             this.btnFinish = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -128,6 +129,7 @@
             // cbNextPagePatternType
             // 
             this.cbNextPagePatternType.Cursor = System.Windows.Forms.Cursors.Default;
+            this.cbNextPagePatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNextPagePatternType.FormattingEnabled = true;
             this.cbNextPagePatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -138,7 +140,6 @@
             this.cbNextPagePatternType.Name = "cbNextPagePatternType";
             this.cbNextPagePatternType.Size = new System.Drawing.Size(114, 20);
             this.cbNextPagePatternType.TabIndex = 12;
-            this.cbNextPagePatternType.Text = "正则表达式";
             // 
             // txtBusinessType
             // 
@@ -189,6 +190,7 @@
             // cbDetailPatternType
             // 
             this.cbDetailPatternType.Cursor = System.Windows.Forms.Cursors.Default;
+            this.cbDetailPatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDetailPatternType.FormattingEnabled = true;
             this.cbDetailPatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -199,7 +201,6 @@
             this.cbDetailPatternType.Name = "cbDetailPatternType";
             this.cbDetailPatternType.Size = new System.Drawing.Size(114, 20);
             this.cbDetailPatternType.TabIndex = 12;
-            this.cbDetailPatternType.Text = "正则表达式";
             // 
             // groupBox1
             // 
@@ -296,8 +297,10 @@
             this.Controls.Add(this.cbCaptureType);
             this.Controls.Add(this.txtPageNum);
             this.Controls.Add(this.txtUrl);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmEdit";
-            this.Text = "修改URL配置";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "编辑URL配置";
             this.Load += new System.EventHandler(this.frmEdit_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

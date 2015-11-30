@@ -31,10 +31,11 @@ namespace FormKiwiCrawler
             this.txtNextPagePattern.Text = editFrmModel.kNextPagePattern;
             this.txtPageNum.Text = editFrmModel.kPageTotal==null?"":editFrmModel.kPageTotal.ToString();
             this.txtUrl.Text = editFrmModel.kUrl.Trim();
-            this.txtComplateDegree.Text = editFrmModel.kComplateDegree.ToString();
+            this.txtComplateDegree.Text = editFrmModel.kComplateDegree == null ? "0" : Convert.ToDecimal(editFrmModel.kComplateDegree).ToString("p2");
+            // model.kComplateDegree == null ? "" : Convert.ToDecimal(model.kComplateDegree).ToString("p2");
 
             this.cbCaptureType.Text = editFrmModel.kCaptureType.Trim();
-            this.cbDetailPatternType.Text = editFrmModel.kDetailPattern.Trim();
+            this.cbDetailPatternType.Text = editFrmModel.kDetailPatternType.Trim();
             this.cbNextPagePatternType.Text = editFrmModel.kNextPagePatternType.Trim();
         }
 
@@ -46,8 +47,8 @@ namespace FormKiwiCrawler
             editFrmModel.kNextPagePattern = this.txtNextPagePattern.Text;
             editFrmModel.kPageTotal = String.IsNullOrEmpty(this.txtPageNum.Text.Trim()) ? null : (int?)Convert.ToInt32(this.txtPageNum.Text.Trim());
             editFrmModel.kUrl = this.txtUrl.Text.Trim();
-            editFrmModel.kComplateDegree = string.IsNullOrEmpty(this.txtComplateDegree.Text.Trim()) ? 0 : Convert.ToDecimal(this.txtComplateDegree.Text.Trim());
-           
+            editFrmModel.kComplateDegree = string.IsNullOrEmpty(this.txtComplateDegree.Text.Trim()) ? 0 : Convert.ToDecimal(this.txtComplateDegree.Text.Trim().ToString().TrimEnd('%'))/100;            
+
             editFrmModel.kCaptureType = this.cbCaptureType.Text;
             editFrmModel.kDetailPatternType = this.cbDetailPatternType.Text;
             editFrmModel.kNextPagePatternType = this.cbNextPagePatternType.Text;

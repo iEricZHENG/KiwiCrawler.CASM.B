@@ -26,19 +26,20 @@
         /// 关于使用 Bloom 算法去除重复 URL：http://www.cnblogs.com/heaad/archive/2011/01/02/1924195.html
         /// </summary>
         private static BloomFilter<string> filter;
-        private static Int32 fileId ;
+        private static Int32 fileId;
         private static ConsoleControl.ConsoleControl kiwiConsole = new ConsoleControl.ConsoleControl();
         private static bool[] kiwiThreadStatus;
-        private static string strExit="";
+        private static string strExit = "";
+        //private static bool isKillTask;
         #endregion
 
         public Main()
         {
             InitializeComponent();
             tabPage4.Controls.Add(kiwiConsole);
-            kiwiConsole.Dock = DockStyle.Fill;
+            kiwiConsole.Dock = DockStyle.Fill;        
             kiwiConsole.Show();
-        }
+        }       
         #region 事件
         private static bool MasterAddUrlEvent(AddUrlEventArgs args)
         {
@@ -126,7 +127,7 @@
             #endregion
         }
         #endregion
-        #region 方法=》链接处理
+        #region 方法-静态=》链接处理
 
         /// <summary>
         /// 处理Html，重新过滤+做的是加法
@@ -184,10 +185,10 @@
         }
 
         #endregion
-        #region 方法=》数据输出
+        #region 方法-静态=》数据输出
         private static void writeToLogView(DataReceivedEventArgs dataReceived)
         {
-            //Kiwi-log           
+            //Kiwi-log                       
             kiwiConsole.WriteOutput(DateTime.Now.ToString() + " -" + fileId + "-" + dataReceived.Url + "\r\n", Color.Green);
         }
 
@@ -204,9 +205,9 @@
             model.kNotes = configModel.kKeyWords;
             bll.Add(model);
             writeToLogView(dataReceived);
-            if (strExit== String.Join("", kiwiThreadStatus).ToLower())
+            if (IsTaskOver())
             {
-                kiwiConsole.WriteOutput(DateTime.Now.ToString()+" 任务结束",Color.OrangeRed);
+                kiwiConsole.WriteOutput(DateTime.Now.ToString() + " 任务结束", Color.OrangeRed);
             }
         }
         #endregion
@@ -238,7 +239,7 @@
             Settings.ThreadCount = 1;
 
             // 设置爬取深度
-            Settings.Depth = 100;//页码数+1
+            Settings.Depth = Convert.ToByte(1000);//页码数+1
 
             // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
             Settings.EscapeLinks.Add(".jpg");
@@ -290,12 +291,12 @@
             }
             else
             {
-                if (tag==0)//0代表单个点击模式
+                if (tag == 0)//0代表单个点击模式
                 {
                     Settings.SeedsAddress.Clear();
                     Settings.SeedsAddress.Add(configModel.kUrl);
                 }
-                
+
             }
             // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
             Settings.EscapeLinks.Add(".jpg");
@@ -353,11 +354,56 @@
             master.DataReceivedEvent += MasterDataReceivedEvent;
             // master.CustomParseLinkEvent2 += Master_CustomParseLinkEvent2;
             master.CustomParseLinkEvent3 += Master_CustomParseLinkEvent3;
-       
+            //master.CustomParseLinkEvent3 += Master_Over;
+
             return master;
         }
+
+        //private static void Master_Over(CustomParseLinkEvent3Args args)
+        //{
+        //    if (isKillTask)
+        //    {
+        //        args.UrlDictionary.Clear();                
+        //    }
+        //}
         #endregion
 
+        #region 方法=》状态控制
+        private static bool IsTaskOver()
+        {
+            if (kiwiThreadStatus == null)
+            {
+                return true;
+            }
+            else
+            {
+                return strExit == String.Join("", kiwiThreadStatus).ToLower();
+            }
+
+        }
+        private void DeWorkingState(DataGridViewCellEventArgs e)
+        {
+            //DataGridViewCellEventArgs preFocus ;
+            if (e != null)
+            {
+                dgvTaskCapture.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "抓取";
+                dgvTaskCapture.Rows[e.RowIndex].Cells[0].Value = e.RowIndex;
+                dgvTaskCapture.Rows[e.RowIndex].DefaultCellStyle = new DataGridViewCellStyle() { BackColor = DefaultBackColor };
+
+            }
+        }
+
+        private void SetWorkingState(DataGridViewCellEventArgs e)
+        {
+            if (e != null)
+            {
+                dgvTaskCapture.Tag = e;
+                dgvTaskCapture.Rows[e.RowIndex].DefaultCellStyle = new DataGridViewCellStyle() { BackColor = Color.GreenYellow };
+                dgvTaskCapture.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "正在抓取";
+            }
+        }
+
+        #endregion
         #region 窗体交互
 
         private void btnAccessDB_Click(object sender, EventArgs e)
@@ -377,9 +423,18 @@
                     Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
                     List<Urlconfigs_k> urlList = null;
                     urlList = urlBll.GetModelList("");
-                    //dataGridView1.DataSource = urlList;
-                    //ListToDataGridView(dgvTaskCapture,headerTitle,urlList);
+
                     ListToDataGridView(dgvTaskCapture, urlList);
+                    //
+                    DataGridViewCellEventArgs focus = dgvTaskCapture.Tag as DataGridViewCellEventArgs;
+                    if (IsTaskOver())
+                    {
+                        DeWorkingState(focus);
+                    }
+                    else
+                    {
+                        SetWorkingState(focus);
+                    }
                     break;
                 default:
                     break;
@@ -419,7 +474,8 @@
                     row.Cells[5].Value = model.kDetailPatternType;
                     row.Cells[6].Value = model.kNextPagePattern;
                     row.Cells[7].Value = model.kNextPagePatternType;
-                    row.Cells[8].Value = model.kComplateDegree;
+                    //row.Cells[8].Value = model.kComplateDegree;
+                    row.Cells[8].Value = model.kComplateDegree == null ? "" : Convert.ToDecimal(model.kComplateDegree).ToString("p2");
                     row.Cells[9].Value = model.kAddressBusinessType;
                     row.Cells[10].Value = model.kKeyWords;
                     row.Cells[11].Value = "抓取";
@@ -448,29 +504,35 @@
             #endregion
             if (e.ColumnIndex == 11)
             {
-                //获得id
-                //dgvTaskCapture.Rows[e.RowIndex].Cells[0].Value.ToString() 
                 //Settings = null;         
                 if (SettingCustomValues(0))
                 {
+                    //获得锁定
+                    //Kiwi-未测试的代码               
+                    //处理上一个任务
+
+                    DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
+                    //开始新的任务                    
+                    SetWorkingState(e);
                     // SetCrawler();
                     kiwiConsole.ClearOutput();
                     fileId = 0;
+                    //tempGridview = dgvTaskCapture;
                     var master = SetCrawler();
                     kiwiThreadStatus = master.ThreadStatus;
                     strExit = "";
+                    timer.Start();
+                    //isKillTask = false;
                     for (int i = 0; i < kiwiThreadStatus.Count(); i++)
                     {
                         strExit += "true";
                     }
                     master.Crawl();
-
                 }
 
             }
 
         }
-
         private void btnAdd_Click(object sender, EventArgs e)
         {
             frmAdd frmAdd_k = new frmAdd();
@@ -515,7 +577,7 @@
             model.kDetailPatternType = dgvTaskCapture.SelectedRows[0].Cells[5].Value.ToString().Trim();
             model.kNextPagePattern = dgvTaskCapture.SelectedRows[0].Cells[6].Value.ToString();
             model.kNextPagePatternType = dgvTaskCapture.SelectedRows[0].Cells[7].Value.ToString().Trim();
-            model.kComplateDegree = dgvTaskCapture.SelectedRows[0].Cells[8].Value == null ? null : (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value);
+            model.kComplateDegree = dgvTaskCapture.SelectedRows[0].Cells[8].Value == null ? null : (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value.ToString().TrimEnd('%')) / 100;
             model.kAddressBusinessType = dgvTaskCapture.SelectedRows[0].Cells[9].Value.ToString();
             model.kKeyWords = dgvTaskCapture.SelectedRows[0].Cells[10].Value.ToString().Trim();
             return model;
@@ -547,8 +609,42 @@
         {
             txtDepth.Enabled = !radioDepthM.Checked;
         }
+        //测试
+        private void button1_Click(object sender, EventArgs e)
+        {
+            pictureBox1.Image = Resource.busy;
+        }
+        private void btnComplate_Click(object sender, EventArgs e)
+        {
+            if (dgvTaskCapture.SelectedRows[0].Cells[0].Value != null)
+            {
+                frmComplate frmComplate_k = new frmComplate(Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[0].Value));
+                if (frmComplate_k.ShowDialog(this) == DialogResult.Cancel)
+                {
+                    //刷新窗口
+                    dgvTaskCapture.Rows.Clear();
+                    List<Urlconfigs_k> urlList = null;
+                    KiwiCrawler.BLL.Urlconfigs_kBll urlBll = new KiwiCrawler.BLL.Urlconfigs_kBll();
+                    urlList = urlBll.GetModelList("");//后期改成分页的            
+                    ListToDataGridView(dgvTaskCapture, urlList);
+                }
+            }
+        }
+
+        //private void btnKillCurrentTask_Click(object sender, EventArgs e)
+        //{
+        //    isKillTask = true;
+        //}
 
         #endregion
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (IsTaskOver())
+            {
+                DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
+            }
+
+        }
     }
 }
-;
