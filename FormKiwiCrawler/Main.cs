@@ -37,9 +37,9 @@
         {
             InitializeComponent();
             tabPage4.Controls.Add(kiwiConsole);
-            kiwiConsole.Dock = DockStyle.Fill;        
+            kiwiConsole.Dock = DockStyle.Fill;
             kiwiConsole.Show();
-        }       
+        }
         #region 事件
         private static bool MasterAddUrlEvent(AddUrlEventArgs args)
         {
@@ -420,20 +420,26 @@
             {
                 case "任务抓取":
                     dgvTaskCapture.Rows.Clear();
-                    Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
-                    List<Urlconfigs_k> urlList = null;
-                    urlList = urlBll.GetModelList("");
-
-                    ListToDataGridView(dgvTaskCapture, urlList);
-                    //
-                    DataGridViewCellEventArgs focus = dgvTaskCapture.Tag as DataGridViewCellEventArgs;
-                    if (IsTaskOver())
+                    try
                     {
-                        DeWorkingState(focus);
+                        Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+                        List<Urlconfigs_k> urlList = null;
+                        urlList = urlBll.GetModelList("");
+                        ListToDataGridView(dgvTaskCapture, urlList);
+                        //
+                        DataGridViewCellEventArgs focus = dgvTaskCapture.Tag as DataGridViewCellEventArgs;
+                        if (IsTaskOver())
+                        {
+                            DeWorkingState(focus);
+                        }
+                        else
+                        {
+                            SetWorkingState(focus);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        SetWorkingState(focus);
+                        MessageBox.Show(ex.ToString());
                     }
                     break;
                 default:
@@ -609,11 +615,7 @@
         {
             txtDepth.Enabled = !radioDepthM.Checked;
         }
-        //测试
-        private void button1_Click(object sender, EventArgs e)
-        {
-            pictureBox1.Image = Resource.busy;
-        }
+
         private void btnComplate_Click(object sender, EventArgs e)
         {
             if (dgvTaskCapture.SelectedRows[0].Cells[0].Value != null)
@@ -645,6 +647,32 @@
                 DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
             }
 
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            dgvTaskCapture.Rows.Clear();
+            try
+            {
+                Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+                List<Urlconfigs_k> urlList = null;
+                urlList = urlBll.GetModelList("");
+                ListToDataGridView(dgvTaskCapture, urlList);
+                //
+                DataGridViewCellEventArgs focus = dgvTaskCapture.Tag as DataGridViewCellEventArgs;
+                if (IsTaskOver())
+                {
+                    DeWorkingState(focus);
+                }
+                else
+                {
+                    SetWorkingState(focus);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }

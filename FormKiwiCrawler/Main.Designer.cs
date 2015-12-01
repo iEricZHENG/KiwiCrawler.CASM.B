@@ -65,10 +65,6 @@
             this.radioSpeedNo = new System.Windows.Forms.RadioButton();
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnAccessDB = new System.Windows.Forms.Button();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -82,8 +78,6 @@
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.tabPage5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -91,7 +85,6 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -451,46 +444,6 @@
             this.tabPage4.Text = "抓取日志";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.pictureBox1);
-            this.tabPage5.Controls.Add(this.button1);
-            this.tabPage5.Controls.Add(this.btnAccessDB);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(1221, 528);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "开发测试2";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(530, 227);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(53, 23);
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(308, 227);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // btnAccessDB
-            // 
-            this.btnAccessDB.Location = new System.Drawing.Point(435, 79);
-            this.btnAccessDB.Name = "btnAccessDB";
-            this.btnAccessDB.Size = new System.Drawing.Size(81, 23);
-            this.btnAccessDB.TabIndex = 3;
-            this.btnAccessDB.Text = "测试连接";
-            this.btnAccessDB.UseVisualStyleBackColor = true;
-            // 
             // timer
             // 
             this.timer.Interval = 2000;
@@ -505,6 +458,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.Text = "KiwiCrawler-1";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -520,8 +474,6 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -536,7 +488,6 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.DataGridView dgvTaskCapture;
         private System.Windows.Forms.DataGridViewTextBoxColumn kId;
         private System.Windows.Forms.DataGridViewTextBoxColumn kUrl;
@@ -562,10 +513,6 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.RadioButton radioThreadC;
         private System.Windows.Forms.RadioButton radioThreadM;
-        
-        private System.Windows.Forms.Button btnAccessDB;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnComplate;
         private System.Windows.Forms.Button btnKillCurrentTask;
         private System.Windows.Forms.Timer timer;
