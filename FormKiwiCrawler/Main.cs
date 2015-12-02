@@ -218,6 +218,7 @@
             filter = new BloomFilter<string>(200000);
             //const string CityName = "beijing";
 
+
             // 设置种子地址
             #region 设置种子地址
             //Settings.SeedsAddress.Add(string.Format("http://jobs.zhaopin.com/{0}", CityName));//招聘
@@ -387,7 +388,7 @@
             if (e != null)
             {
                 dgvTaskCapture.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "抓取";
-                dgvTaskCapture.Rows[e.RowIndex].Cells[0].Value = e.RowIndex;
+                //dgvTaskCapture.Rows[e.RowIndex].Cells[0].Value = e.RowIndex;//RowIndex不等于id
                 dgvTaskCapture.Rows[e.RowIndex].DefaultCellStyle = new DataGridViewCellStyle() { BackColor = DefaultBackColor };
 
             }
@@ -516,11 +517,10 @@
                     //获得锁定
                     //Kiwi-未测试的代码               
                     //处理上一个任务
-
                     DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
                     //开始新的任务                    
                     SetWorkingState(e);
-                    // SetCrawler();
+                    //SetCrawler();
                     kiwiConsole.ClearOutput();
                     fileId = 0;
                     //tempGridview = dgvTaskCapture;
