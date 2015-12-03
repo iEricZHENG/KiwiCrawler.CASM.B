@@ -29,7 +29,10 @@
         private static Int32 fileId;
         private static ConsoleControl.ConsoleControl kiwiConsole = new ConsoleControl.ConsoleControl();
         private static bool[] kiwiThreadStatus;
+        private static bool isWriteTaskOver = false;
         private static string strExit = "";
+        private readonly static object locker = new object();
+        static Thread writeThread;
         //private static bool isKillTask;
         #endregion
 
@@ -52,38 +55,55 @@
         }
         private static void MasterDataReceivedEvent(DataReceivedEventArgs args)
         {
-            // 在此处解析页面，可以用类似于 HtmlAgilityPack（页面解析组件）的东东、也可以用正则表达式、还可以自己进行字符串分析
+                     // 在此处解析页面，可以用类似于 HtmlAgilityPack（页面解析组件）的东东、也可以用正则表达式、还可以自己进行字符串分析
             //NSoup.Nodes.Document doc = NSoup.NSoupClient.Parse(args.Html);
 
             #region 接收数据处理，//如果有问题可以使用多线程
-            DataReceivedEventArgs_Kiwi.Instance.EnQueue(args);
-            ThreadPool.QueueUserWorkItem(o =>
+            DataReceivedEventArgs_Kiwi.Instance.EnQueue(args);            
+            //原来线程池操作
+            //ThreadPool.QueueUserWorkItem(o =>
+            //{
+            //    WriteToDB();
+            //});
+            #endregion 接收数据处理
+        }
+
+        private static void WriteToDB()
+        {
+            while (true)
             {
-                while (true)
+                try
                 {
-                    try
+                    if (DataReceivedEventArgs_Kiwi.Instance.Count > 0)
                     {
-                        if (DataReceivedEventArgs_Kiwi.Instance.Count > 0)
+                        isWriteTaskOver = false;
+                        DataReceivedEventArgs dataReceived = DataReceivedEventArgs_Kiwi.Instance.DeQueue();                      
+                        if (!String.IsNullOrEmpty(dataReceived.Html) && dataReceived.Html.Trim() != "")
                         {
-                            DataReceivedEventArgs dataReceived = DataReceivedEventArgs_Kiwi.Instance.DeQueue();
-                            if (!String.IsNullOrEmpty(dataReceived.Html) && dataReceived.Html.Trim() != "")
-                            {
-                                WriteToFiles(dataReceived);
-                            }
+                            WriteToFiles(dataReceived);
+                        }
+                    }
+                    else
+                    {
+                        isWriteTaskOver = true;
+                        if (IsTaskOver())
+                        {
+                            kiwiConsole.WriteOutput(DateTime.Now.ToString() + "-【" + Thread.CurrentThread.ManagedThreadId + "】-" + " 任务结束", Color.OrangeRed);
+                            writeThread.Abort();
+                            writeThread.DisableComObjectEagerCleanup();
                         }
                         else
                         {
                             Thread.Sleep(2000);
                         }
                     }
-                    catch (Exception)
-                    {
-                    }
                 }
-            });
-
-            #endregion 接收数据处理
+                catch (Exception)
+                {
+                }
+            }
         }
+
         private static void Master_CustomParseLinkEvent3(CustomParseLinkEvent3Args args)
         {
 
@@ -188,12 +208,14 @@
         #region 方法-静态=》数据输出
         private static void writeToLogView(DataReceivedEventArgs dataReceived)
         {
-            //Kiwi-log                       
-            kiwiConsole.WriteOutput(DateTime.Now.ToString() + " -" + fileId + "-" + dataReceived.Url + "\r\n", Color.Green);
+            //Kiwi-log         
+
+            kiwiConsole.WriteOutput(DateTime.Now.ToString() + " -" + fileId + "-【" + Thread.CurrentThread.ManagedThreadId + "】-" + dataReceived.Url + "\r\n", Color.Green);
         }
 
         private static void WriteToFiles(DataReceivedEventArgs dataReceived)
         {
+
             KiwiCrawler.BLL.Capturedata_kBll bll = new KiwiCrawler.BLL.Capturedata_kBll();
             KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
             model.kCaptureDateTime = DateTime.Now;
@@ -201,14 +223,12 @@
             model.kType = configModel.kAddressBusinessType.Trim();//民政部门；安全生产监督管理局；地震局
             model.kUrl = dataReceived.Url;
             fileId++;
+
             model.kNumber = fileId;
             model.kNotes = configModel.kKeyWords;
             bll.Add(model);
             writeToLogView(dataReceived);
-            if (IsTaskOver())
-            {
-                kiwiConsole.WriteOutput(DateTime.Now.ToString() + " 任务结束", Color.OrangeRed);
-            }
+         
         }
         #endregion
         #region 方法=》设置
@@ -370,8 +390,9 @@
         #endregion
 
         #region 方法=》状态控制
-        private static bool IsTaskOver()
+        private static bool IsCaptureTaskOver()
         {
+            //抓取进程结束
             if (kiwiThreadStatus == null)
             {
                 return true;
@@ -380,7 +401,17 @@
             {
                 return strExit == String.Join("", kiwiThreadStatus).ToLower();
             }
-
+        }
+        private static bool IsTaskOver()
+        {
+            if (IsCaptureTaskOver() && isWriteTaskOver)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         private void DeWorkingState(DataGridViewCellEventArgs e)
         {
@@ -529,11 +560,14 @@
                     strExit = "";
                     timer.Start();
                     //isKillTask = false;
+                    isWriteTaskOver = false;
                     for (int i = 0; i < kiwiThreadStatus.Count(); i++)
                     {
                         strExit += "true";
                     }
                     master.Crawl();
+                    writeThread = new Thread(WriteToDB);
+                    writeThread.Start();
                 }
 
             }
