@@ -66,6 +66,7 @@
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.ckbDetail2Mode = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -114,6 +115,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.ckbDetail2Mode);
             this.splitContainer2.Panel1.Controls.Add(this.btnKillCurrentTask);
             this.splitContainer2.Panel1.Controls.Add(this.btnComplate);
             this.splitContainer2.Panel1.Controls.Add(this.btnDelete);
@@ -449,6 +451,16 @@
             this.timer.Interval = 2000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // ckbDetail2Mode
+            // 
+            this.ckbDetail2Mode.AutoSize = true;
+            this.ckbDetail2Mode.Location = new System.Drawing.Point(1040, 7);
+            this.ckbDetail2Mode.Name = "ckbDetail2Mode";
+            this.ckbDetail2Mode.Size = new System.Drawing.Size(84, 16);
+            this.ckbDetail2Mode.TabIndex = 11;
+            this.ckbDetail2Mode.Text = "第二种模式";
+            this.ckbDetail2Mode.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -462,6 +474,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
@@ -516,6 +529,7 @@
         private System.Windows.Forms.Button btnComplate;
         private System.Windows.Forms.Button btnKillCurrentTask;
         private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.CheckBox ckbDetail2Mode;
     }
 }
 

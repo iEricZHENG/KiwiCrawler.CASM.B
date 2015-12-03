@@ -32,6 +32,7 @@
         private static bool isWriteTaskOver = false;
         private static string strExit = "";
         private readonly static object locker = new object();
+        private static bool isDetailMode2 = false;
         static Thread writeThread;
         //private static bool isKillTask;
         #endregion
@@ -55,11 +56,10 @@
         }
         private static void MasterDataReceivedEvent(DataReceivedEventArgs args)
         {
-                     // 在此处解析页面，可以用类似于 HtmlAgilityPack（页面解析组件）的东东、也可以用正则表达式、还可以自己进行字符串分析
+            // 在此处解析页面，可以用类似于 HtmlAgilityPack（页面解析组件）的东东、也可以用正则表达式、还可以自己进行字符串分析
             //NSoup.Nodes.Document doc = NSoup.NSoupClient.Parse(args.Html);
-
             #region 接收数据处理，//如果有问题可以使用多线程
-            DataReceivedEventArgs_Kiwi.Instance.EnQueue(args);            
+            DataReceivedEventArgs_Kiwi.Instance.EnQueue(args);
             //原来线程池操作
             //ThreadPool.QueueUserWorkItem(o =>
             //{
@@ -77,7 +77,7 @@
                     if (DataReceivedEventArgs_Kiwi.Instance.Count > 0)
                     {
                         isWriteTaskOver = false;
-                        DataReceivedEventArgs dataReceived = DataReceivedEventArgs_Kiwi.Instance.DeQueue();                      
+                        DataReceivedEventArgs dataReceived = DataReceivedEventArgs_Kiwi.Instance.DeQueue();
                         if (!String.IsNullOrEmpty(dataReceived.Html) && dataReceived.Html.Trim() != "")
                         {
                             WriteToFiles(dataReceived);
@@ -89,8 +89,16 @@
                         if (IsTaskOver())
                         {
                             kiwiConsole.WriteOutput(DateTime.Now.ToString() + "-【" + Thread.CurrentThread.ManagedThreadId + "】-" + " 任务结束", Color.OrangeRed);
-                            writeThread.Abort();
-                            writeThread.DisableComObjectEagerCleanup();
+                            try
+                            {
+                                writeThread.Abort();
+                                writeThread.DisableComObjectEagerCleanup();
+                            }
+                            catch (Exception)
+                            {
+
+                                throw;
+                            }                            
                         }
                         else
                         {
@@ -108,7 +116,21 @@
         {
 
             #region 
-            CustomParseLink_MainList(args, configModel.kDetailPattern);//什么都不匹配
+            //
+            #region 可以进一步修改
+            if (isDetailMode2 == true)
+            {
+                CustomParseLink_MainList(args, "今天天气好晴朗，又是刮风又是下雨。");//什么都不匹配
+                CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
+            }
+            else
+            {
+                CustomParseLink_MainList(args, configModel.kDetailPattern);//什么都不匹配
+            } 
+            #endregion
+            //
+            //CustomParseLink_MainList(args, "今天天气好晴朗，又是刮风又是下雨");//什么都不匹配
+            //CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
             CustomParseLink_NextPageSdau(args, configModel.kNextPagePattern, 1);//下一页                     
             #endregion
 
@@ -146,6 +168,30 @@
             //CustomParseLink_NextPageSdau(args, "http://beijing.anjuke.com/prop/view/.*commsearch_p", 0); 
             #endregion
         }
+
+        private static void CustomParseLink_MainListMode2(CustomParseLinkEvent3Args args, string kDetailPattern, int groupIndex)
+        {
+            string url = "";
+            if (args != null && !string.IsNullOrEmpty(args.Html))
+            {
+                MatchCollection mat_k = Regex.Matches(args.Html, kDetailPattern, RegexOptions.IgnoreCase);
+                foreach (Match item in mat_k)
+                {
+                    if (item.Success)
+                    {
+                        url = item.Groups[groupIndex].Value;
+                        var baseUri = new Uri(args.UrlInfo.UrlString);
+                        Uri currentUri = url.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                                             ? new Uri(url)
+                                             : new Uri(baseUri, url);//根据指定的基 URI 和相对 URI 字符串，初始化 System.Uri 类的新实例。
+                                                                     //如果不包含http，则认为超链接是相对路径，根据baseUrl建立绝对路径
+                        url = currentUri.AbsoluteUri;
+                        //Console.WriteLine("######" + url + "######");
+                        args.UrlDictionary.Add(url, Guid.NewGuid().ToString());
+                    }
+                }                
+            }
+        }
         #endregion
         #region 方法-静态=》链接处理
 
@@ -160,6 +206,7 @@
             string url = "";
             if (args != null && !string.IsNullOrEmpty(args.Html))
             {
+
                 Regex regex = new Regex(patternStr, RegexOptions.IgnoreCase);//忽略大小写
                 Match mat = regex.Match(args.Html);
                 if (mat.Success)
@@ -228,7 +275,7 @@
             model.kNotes = configModel.kKeyWords;
             bll.Add(model);
             writeToLogView(dataReceived);
-         
+
         }
         #endregion
         #region 方法=》设置
@@ -274,6 +321,7 @@
         }
         private bool SettingCustomValues(Int32 tag)
         {
+            
             bool isOk = true;
             configModel = GetModelByRow();
             //爬虫配置
@@ -331,7 +379,7 @@
             // settings.UserAgent 已提供默认值，如有特殊需求则自行设置
 
             // 设置请求页面的超时时间，默认值 15000 毫秒
-            // settings.Timeout 按照自己的要求确定超时时间
+            //Settings.Timeout = 60000; //按照自己的要求确定超时时间
 
             // 设置用于过滤的正则表达式
             //Settings.RegularFilterExpressions.Add("<a .+ href='(.+)'>下一页</a>");//  string strReg = "<a .+ href='(.+)'>下一页</a>";
@@ -564,6 +612,14 @@
                     for (int i = 0; i < kiwiThreadStatus.Count(); i++)
                     {
                         strExit += "true";
+                    }
+                    if (ckbDetail2Mode.Checked)
+                    {
+                        isDetailMode2 = true;
+                    }
+                    else
+                    {
+                        isDetailMode2 = false;
                     }
                     master.Crawl();
                     writeThread = new Thread(WriteToDB);
