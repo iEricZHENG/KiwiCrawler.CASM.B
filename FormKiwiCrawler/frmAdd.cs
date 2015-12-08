@@ -30,17 +30,33 @@ namespace FormKiwiCrawler
             urlFrmMode.kNextPagePatternType = cbNextPagePatternType.Text.Trim();
             urlFrmMode.kPageTotal = String.IsNullOrEmpty(txtPageNum.Text.Trim()) ? -1 : Int32.Parse(txtPageNum.Text.Trim());
             urlFrmMode.kUrl = txtUrl.Text.Trim();
-
+            string msg = "";
             //保存到数据库
             KiwiCrawler.BLL.Urlconfigs_kBll bll = new KiwiCrawler.BLL.Urlconfigs_kBll();
             if (bll.Add(urlFrmMode))
             {
-                MessageBox.Show("操作成功");
+                msg += "添加种子链接成功。\r\n";
             }
             else
             {
-                MessageBox.Show("操作失败");
+                msg += "添加种子链接失败。\r\n";
             }
+            //添加到抽取配置表
+            KiwiCrawler.BLL.Extractionconfig_kBll extractionconfigBll = new KiwiCrawler.BLL.Extractionconfig_kBll();
+            KiwiCrawler.Model.Extractionconfig_k extractionconfigModel = new KiwiCrawler.Model.Extractionconfig_k();
+            extractionconfigModel.KId = urlFrmMode.kId;
+            extractionconfigModel.KUrl = urlFrmMode.kUrl;
+            extractionconfigModel.KKeyword = urlFrmMode.kKeyWords;
+            extractionconfigModel.KPercent = 0;
+            if (extractionconfigBll.Add(extractionconfigModel))
+            {
+                msg += "同步抽取信息成功。\r\n";
+            }
+            else
+            {
+                msg += "同步抽取信息失败。";
+            }
+            MessageBox.Show(msg);
             urlFrmMode_k = urlFrmMode;
             this.Close();
         }
