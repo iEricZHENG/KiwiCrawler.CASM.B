@@ -359,7 +359,41 @@ namespace KiwiCrawler.DAL
 
         #endregion  BasicMethod
         #region  ExtensionMethod
-
+        public int AddBringId(KiwiCrawler.Model.Urlconfigs_k model)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into urlconfigs_k(");
+            strSql.Append("kUrl,kPageTotal,kCaptureType,kDetailPattern,kDetailPatternType,kNextPagePattern,kNextPagePatternType,kComplateDegree,kAddressBusinessType,kKeyWords,kNotes)");
+            strSql.Append(" output inserted.kId");
+            strSql.Append(" values (");
+            strSql.Append("@kUrl,@kPageTotal,@kCaptureType,@kDetailPattern,@kDetailPatternType,@kNextPagePattern,@kNextPagePatternType,@kComplateDegree,@kAddressBusinessType,@kKeyWords,@kNotes)");
+            MySqlParameter[] parameters = {
+                    new MySqlParameter("@kUrl", MySqlDbType.Text),
+                    new MySqlParameter("@kPageTotal", MySqlDbType.Int32,11),
+                    new MySqlParameter("@kCaptureType", MySqlDbType.Text),
+                    new MySqlParameter("@kDetailPattern", MySqlDbType.Text),
+                    new MySqlParameter("@kDetailPatternType", MySqlDbType.VarChar,255),
+                    new MySqlParameter("@kNextPagePattern", MySqlDbType.Text),
+                    new MySqlParameter("@kNextPagePatternType", MySqlDbType.VarChar,255),
+                    new MySqlParameter("@kComplateDegree", MySqlDbType.Float),
+                    new MySqlParameter("@kAddressBusinessType", MySqlDbType.Text),
+                    new MySqlParameter("@kKeyWords", MySqlDbType.Text),
+                    new MySqlParameter("@kNotes", MySqlDbType.VarChar, 255)};
+            parameters[0].Value = model.kUrl;
+            parameters[1].Value = model.kPageTotal;
+            parameters[2].Value = model.kCaptureType;
+            parameters[3].Value = model.kDetailPattern;
+            parameters[4].Value = model.kDetailPatternType;
+            parameters[5].Value = model.kNextPagePattern;
+            parameters[6].Value = model.kNextPagePatternType;
+            parameters[7].Value = model.kComplateDegree;
+            parameters[8].Value = model.kAddressBusinessType;
+            parameters[9].Value = model.kKeyWords;
+            parameters[10].Value = model.kNotes;
+            int id =Convert.ToInt32(DbHelperMySQL.GetSingle(strSql.ToString(), parameters));
+            return id;
+      
+        }
         #endregion  ExtensionMethod
     }
 }

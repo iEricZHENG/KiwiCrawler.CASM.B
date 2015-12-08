@@ -37,12 +37,12 @@ namespace KiwiCrawler.BLL
 		public bool Add(KiwiCrawler.Model.Urlconfigs_k model)
 		{
 			return dal.Add(model);
-		}
+		}      
 
-		/// <summary>
-		/// 更新一条数据
-		/// </summary>
-		public bool Update(KiwiCrawler.Model.Urlconfigs_k model)
+        /// <summary>
+        /// 更新一条数据
+        /// </summary>
+        public bool Update(KiwiCrawler.Model.Urlconfigs_k model)
 		{
 			return dal.Update(model);
 		}
@@ -155,18 +155,26 @@ namespace KiwiCrawler.BLL
 		{
 			return dal.GetListByPage( strWhere,  orderby,  startIndex,  endIndex);
 		}
-		/// <summary>
-		/// 分页获取数据列表
-		/// </summary>
-		//public DataSet GetList(int PageSize,int PageIndex,string strWhere)
-		//{
-			//return dal.GetList(PageSize,PageIndex,strWhere);
-		//}
+        /// <summary>
+        /// 分页获取数据列表
+        /// </summary>
+        //public DataSet GetList(int PageSize,int PageIndex,string strWhere)
+        //{
+        //return dal.GetList(PageSize,PageIndex,strWhere);
+        //}
 
-		#endregion  BasicMethod
-		#region  ExtensionMethod
-
-		#endregion  ExtensionMethod
-	}
+        #endregion  BasicMethod
+        #region  ExtensionMethod
+        /// <summary>
+        /// 添加一条信息，返回添加数据的主键
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public int AddBringId(KiwiCrawler.Model.Urlconfigs_k model)
+        {
+            return dal.AddBringId(model);
+        }
+        #endregion  ExtensionMethod
+    }
 }
 

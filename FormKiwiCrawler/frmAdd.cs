@@ -11,14 +11,14 @@ namespace FormKiwiCrawler
 {
     public partial class frmAdd : Form
     {
-        public KiwiCrawler.Model.Urlconfigs_k urlFrmMode_k { get; set; }
+        public KiwiCrawler.Model.Urlconfigs_k urlFrmMode_k { get; set; }//这个属性好像没用到，记不得了20151208
         public frmAdd()
         {
             InitializeComponent();
-        }      
+        }
         private void btnFinish_Click(object sender, EventArgs e)
         {
-            KiwiCrawler.Model.Urlconfigs_k urlFrmMode=new KiwiCrawler.Model.Urlconfigs_k();
+            KiwiCrawler.Model.Urlconfigs_k urlFrmMode = new KiwiCrawler.Model.Urlconfigs_k();
 
             urlFrmMode.kAddressBusinessType = txtBusinessType.Text.Trim();
             urlFrmMode.kCaptureType = cbCaptureType.Text.Trim();
@@ -33,29 +33,32 @@ namespace FormKiwiCrawler
             string msg = "";
             //保存到数据库
             KiwiCrawler.BLL.Urlconfigs_kBll bll = new KiwiCrawler.BLL.Urlconfigs_kBll();
+
             if (bll.Add(urlFrmMode))
             {
                 msg += "添加种子链接成功。\r\n";
+                //添加到抽取配置表
+                KiwiCrawler.BLL.Extractionconfig_kBll extractionconfigBll = new KiwiCrawler.BLL.Extractionconfig_kBll();
+                KiwiCrawler.Model.Extractionconfig_k extractionconfigModel = new KiwiCrawler.Model.Extractionconfig_k();
+                //extractionconfigModel.KId = bll.GetMaxId()-1;//查询出来的比实际加了1
+                extractionconfigModel.KId = bll.GetModelList("kUrl='" + urlFrmMode.kUrl + "'").FirstOrDefault().kId;
+                extractionconfigModel.KUrl = urlFrmMode.kUrl;
+                extractionconfigModel.KKeyword = urlFrmMode.kKeyWords;
+                extractionconfigModel.KPercent = 0;
+                if (extractionconfigBll.Add(extractionconfigModel))
+                {
+                    msg += "同步抽取信息成功。\r\n";
+                }
+                else
+                {
+                    msg += "同步抽取信息失败。";
+                }
             }
             else
             {
                 msg += "添加种子链接失败。\r\n";
             }
-            //添加到抽取配置表
-            KiwiCrawler.BLL.Extractionconfig_kBll extractionconfigBll = new KiwiCrawler.BLL.Extractionconfig_kBll();
-            KiwiCrawler.Model.Extractionconfig_k extractionconfigModel = new KiwiCrawler.Model.Extractionconfig_k();
-            extractionconfigModel.KId = urlFrmMode.kId;
-            extractionconfigModel.KUrl = urlFrmMode.kUrl;
-            extractionconfigModel.KKeyword = urlFrmMode.kKeyWords;
-            extractionconfigModel.KPercent = 0;
-            if (extractionconfigBll.Add(extractionconfigModel))
-            {
-                msg += "同步抽取信息成功。\r\n";
-            }
-            else
-            {
-                msg += "同步抽取信息失败。";
-            }
+
             MessageBox.Show(msg);
             urlFrmMode_k = urlFrmMode;
             this.Close();
