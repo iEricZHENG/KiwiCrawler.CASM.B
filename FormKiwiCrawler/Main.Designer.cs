@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.ckbDetail2Mode = new System.Windows.Forms.CheckBox();
             this.btnKillCurrentTask = new System.Windows.Forms.Button();
             this.btnComplate = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
@@ -66,7 +67,6 @@
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.ckbDetail2Mode = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -128,6 +128,17 @@
             this.splitContainer2.Size = new System.Drawing.Size(1215, 522);
             this.splitContainer2.SplitterDistance = 33;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // ckbDetail2Mode
+            // 
+            this.ckbDetail2Mode.AutoSize = true;
+            this.ckbDetail2Mode.Location = new System.Drawing.Point(1040, 7);
+            this.ckbDetail2Mode.Name = "ckbDetail2Mode";
+            this.ckbDetail2Mode.Size = new System.Drawing.Size(84, 16);
+            this.ckbDetail2Mode.TabIndex = 11;
+            this.ckbDetail2Mode.Text = "第二种模式";
+            this.ckbDetail2Mode.UseVisualStyleBackColor = true;
+            this.ckbDetail2Mode.Visible = false;
             // 
             // btnKillCurrentTask
             // 
@@ -450,16 +461,6 @@
             // 
             this.timer.Interval = 2000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // ckbDetail2Mode
-            // 
-            this.ckbDetail2Mode.AutoSize = true;
-            this.ckbDetail2Mode.Location = new System.Drawing.Point(1040, 7);
-            this.ckbDetail2Mode.Name = "ckbDetail2Mode";
-            this.ckbDetail2Mode.Size = new System.Drawing.Size(84, 16);
-            this.ckbDetail2Mode.TabIndex = 11;
-            this.ckbDetail2Mode.Text = "第二种模式";
-            this.ckbDetail2Mode.UseVisualStyleBackColor = true;
             // 
             // Main
             // 

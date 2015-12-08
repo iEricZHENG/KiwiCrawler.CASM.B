@@ -34,6 +34,7 @@
             this.txtTail = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnCompute = new System.Windows.Forms.Button();
+            this.ckbDetail = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -70,7 +71,7 @@
             // 
             // btnCompute
             // 
-            this.btnCompute.Location = new System.Drawing.Point(86, 136);
+            this.btnCompute.Location = new System.Drawing.Point(153, 136);
             this.btnCompute.Name = "btnCompute";
             this.btnCompute.Size = new System.Drawing.Size(75, 23);
             this.btnCompute.TabIndex = 6;
@@ -78,11 +79,22 @@
             this.btnCompute.UseVisualStyleBackColor = true;
             this.btnCompute.Click += new System.EventHandler(this.btnCompute_Click);
             // 
+            // ckbDetail
+            // 
+            this.ckbDetail.AutoSize = true;
+            this.ckbDetail.Location = new System.Drawing.Point(33, 140);
+            this.ckbDetail.Name = "ckbDetail";
+            this.ckbDetail.Size = new System.Drawing.Size(84, 16);
+            this.ckbDetail.TabIndex = 7;
+            this.ckbDetail.Text = "没有详细页";
+            this.ckbDetail.UseVisualStyleBackColor = true;
+            // 
             // frmComplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(260, 188);
+            this.Controls.Add(this.ckbDetail);
             this.Controls.Add(this.btnCompute);
             this.Controls.Add(this.txtTail);
             this.Controls.Add(this.label3);
@@ -104,5 +116,6 @@
         private System.Windows.Forms.TextBox txtTail;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnCompute;
+        private System.Windows.Forms.CheckBox ckbDetail;
     }
 }

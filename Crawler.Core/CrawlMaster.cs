@@ -151,10 +151,15 @@ namespace KiwiCrawler.Core
         /// The stop.
         /// </summary>
         public void Stop()
-        {
+        {            
             foreach (Thread thread in this.threads)
             {
                 thread.Abort();
+            }
+            //Kiwi：添加爬虫终止状态
+            for (int i = 0; i < this.threads.Length; i++)
+            {
+                this.ThreadStatus[i] = true;
             }
         }
 

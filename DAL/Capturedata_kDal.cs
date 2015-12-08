@@ -51,7 +51,7 @@ namespace KiwiCrawler.DAL
 			strSql.Append("@kUrl,@kContent,@kType,@kCaptureDateTime,@kNumber,@kNotes)");
 			MySqlParameter[] parameters = {
 					new MySqlParameter("@kUrl", MySqlDbType.Text),
-					new MySqlParameter("@kContent", MySqlDbType.Text),
+					new MySqlParameter("@kContent", MySqlDbType.LongText),
 					new MySqlParameter("@kType", MySqlDbType.VarChar,255),
 					new MySqlParameter("@kCaptureDateTime", MySqlDbType.DateTime),
 					new MySqlParameter("@kNumber", MySqlDbType.Int32,11),
@@ -89,7 +89,7 @@ namespace KiwiCrawler.DAL
 			strSql.Append(" where kId=@kId");
 			MySqlParameter[] parameters = {
 					new MySqlParameter("@kUrl", MySqlDbType.Text),
-					new MySqlParameter("@kContent", MySqlDbType.Text),
+					new MySqlParameter("@kContent", MySqlDbType.LongText),
 					new MySqlParameter("@kType", MySqlDbType.VarChar,255),
 					new MySqlParameter("@kCaptureDateTime", MySqlDbType.DateTime),
 					new MySqlParameter("@kNumber", MySqlDbType.Int32,11),

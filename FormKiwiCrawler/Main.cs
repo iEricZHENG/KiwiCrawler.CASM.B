@@ -19,7 +19,7 @@
     public partial class Main : Form
     {
         #region 静态字段       
-        private static readonly CrawlSettings Settings = new CrawlSettings();
+        private static CrawlSettings Settings = new CrawlSettings();
         private static KiwiCrawler.Model.Urlconfigs_k configModel = new Urlconfigs_k();
         /// <summary>
         /// The filter.
@@ -29,10 +29,11 @@
         private static Int32 fileId;
         private static ConsoleControl.ConsoleControl kiwiConsole = new ConsoleControl.ConsoleControl();
         private static bool[] kiwiThreadStatus;
-        private static bool isWriteTaskOver = false;
+        private static bool isWriteTaskOver = true;
         private static string strExit = "";
         private readonly static object locker = new object();
-        private static bool isDetailMode2 = false;
+        private static CrawlMaster master;
+        //private static bool isDetailMode2 = false;
         static Thread writeThread;
         //private static bool isKillTask;
         #endregion
@@ -88,7 +89,7 @@
                         isWriteTaskOver = true;
                         if (IsTaskOver())
                         {
-                            kiwiConsole.WriteOutput(DateTime.Now.ToString() + "-【" + Thread.CurrentThread.ManagedThreadId + "】-" + " 任务结束", Color.OrangeRed);
+                            kiwiConsole.WriteOutput(DateTime.Now.ToString() + "-【" + Thread.CurrentThread.ManagedThreadId + "】-" + " 任务结束\r\n", Color.OrangeRed);
                             try
                             {
                                 writeThread.Abort();
@@ -98,7 +99,7 @@
                             {
 
                                 throw;
-                            }                            
+                            }
                         }
                         else
                         {
@@ -114,23 +115,25 @@
 
         private static void Master_CustomParseLinkEvent3(CustomParseLinkEvent3Args args)
         {
+           
+            
 
             #region 
             //
             #region 可以进一步修改
-            if (isDetailMode2 == true)
-            {
-                CustomParseLink_MainList(args, "今天天气好晴朗，又是刮风又是下雨。");//什么都不匹配
-                CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
-            }
-            else
-            {
-                CustomParseLink_MainList(args, configModel.kDetailPattern);//什么都不匹配
-            } 
+            //if (isDetailMode2 == true)
+            //{
+            //    CustomParseLink_MainList(args, "今天天气好晴朗，又是刮风又是下雨。");//什么都不匹配
+            //    CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
+            //}
+            //else
+            //{
+            //    CustomParseLink_MainList(args, configModel.kDetailPattern);//什么都不匹配
+            //} 
             #endregion
             //
-            //CustomParseLink_MainList(args, "今天天气好晴朗，又是刮风又是下雨");//什么都不匹配
-            //CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
+            CustomParseLink_MainList(args, "什么都不匹配什么都不匹配什么都不匹配什么都不匹配");//什么都不匹配
+            CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
             CustomParseLink_NextPageSdau(args, configModel.kNextPagePattern, 1);//下一页                     
             #endregion
 
@@ -189,7 +192,7 @@
                         //Console.WriteLine("######" + url + "######");
                         args.UrlDictionary.Add(url, Guid.NewGuid().ToString());
                     }
-                }                
+                }
             }
         }
         #endregion
@@ -272,7 +275,7 @@
             fileId++;
 
             model.kNumber = fileId;
-            model.kNotes = configModel.kKeyWords;
+            model.kNotes =configModel.kId+":"+configModel.kKeyWords;
             bll.Add(model);
             writeToLogView(dataReceived);
 
@@ -321,7 +324,7 @@
         }
         private bool SettingCustomValues(Int32 tag)
         {
-            
+
             bool isOk = true;
             configModel = GetModelByRow();
             //爬虫配置
@@ -504,6 +507,7 @@
                     {
                         Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
                         List<Urlconfigs_k> urlList = null;
+
                         urlList = urlBll.GetModelList("");
                         ListToDataGridView(dgvTaskCapture, urlList);
                         //
@@ -591,44 +595,96 @@
             if (e.ColumnIndex == 11)
             {
                 //Settings = null;         
-                if (SettingCustomValues(0))
+                //获得锁定
+                //Kiwi-未测试的代码               
+                //处理上一个任务
+                 var compalte_k= (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value.ToString().TrimEnd('%')) / 100;
+                if ((compalte_k>= 0.9m) && (compalte_k <=1.0m))//先简单的这样控制一下。
                 {
-                    //获得锁定
-                    //Kiwi-未测试的代码               
-                    //处理上一个任务
-                    DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
-                    //开始新的任务                    
-                    SetWorkingState(e);
-                    //SetCrawler();
-                    kiwiConsole.ClearOutput();
-                    fileId = 0;
-                    //tempGridview = dgvTaskCapture;
-                    var master = SetCrawler();
-                    kiwiThreadStatus = master.ThreadStatus;
-                    strExit = "";
-                    timer.Start();
-                    //isKillTask = false;
-                    isWriteTaskOver = false;
-                    for (int i = 0; i < kiwiThreadStatus.Count(); i++)
+                    MessageBox.Show("该任务抓取已经完成，请选择其他任务");
+                }
+                else
+                {
+                    if (IsTaskOver())
                     {
-                        strExit += "true";
-                    }
-                    if (ckbDetail2Mode.Checked)
-                    {
-                        isDetailMode2 = true;
+                        DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
+                        if (SettingCustomValues(0))
+                        {
+                            RunNewTask(e);
+                        }
+
                     }
                     else
                     {
-                        isDetailMode2 = false;
-                    }
-                    master.Crawl();
-                    writeThread = new Thread(WriteToDB);
-                    writeThread.Start();
-                }
+                        #region 停止程序的代码 
+                        //isWriteTaskOver = true;
+                        //if (master != null)
+                        //{
+                        //    master.Stop();
+                        //    master = null;
+                        //}
+                        //while (DataReceivedEventArgs_Kiwi.Instance.Count > 0)
+                        //{
+                        //    DataReceivedEventArgs_Kiwi.Instance.DeQueue();
+                        //}
+                        //writeThread.Abort();
+                        ////while (ContentQueue_Kiwi.Instance.Count>0)
+                        ////{
+                        ////    ContentQueue_Kiwi.Instance.DeQueue();
+                        ////}                        
 
+                        //if (IsTaskOver())
+                        //{
+                        //    if (SettingCustomValues(0))
+                        //    {
+                        //        RunNewTask(e);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    MessageBox.Show("请稍等，正在终止任务...");
+                        //} 
+                        #endregion
+                        MessageBox.Show("抓取任务正在进行，请等待任务结束...");
+                    }
+                }
+        
             }
 
         }
+
+        private void RunNewTask(DataGridViewCellEventArgs e)
+        {
+            //开始新的任务                    
+            SetWorkingState(e);
+            //SetCrawler();
+            kiwiConsole.ClearOutput();
+            fileId = 0;
+            //tempGridview = dgvTaskCapture;
+            master = SetCrawler();
+            kiwiThreadStatus = master.ThreadStatus;
+            strExit = "";
+            timer.Start();//20151204暂时注释掉
+            //isKillTask = false;
+            isWriteTaskOver = false;
+            for (int i = 0; i < kiwiThreadStatus.Count(); i++)
+            {
+                strExit += "true";
+            }
+            //if (ckbDetail2Mode.Checked)
+            //{
+            //    isDetailMode2 = true;
+            //}
+            //else
+            //{
+            //    isDetailMode2 = false;
+            //}
+
+            master.Crawl();
+            writeThread = new Thread(WriteToDB);
+            writeThread.Start();
+        }
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             frmAdd frmAdd_k = new frmAdd();
@@ -686,13 +742,17 @@
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
-            urlBll.Delete(Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[0].Value));//id是自动生成的，应该不会有错
-            //刷新
-            dgvTaskCapture.Rows.Clear();
-            List<Urlconfigs_k> urlList = null;
-            urlList = urlBll.GetModelList("");//后期改成分页的            
-            ListToDataGridView(dgvTaskCapture, urlList);
+            var result= MessageBox.Show("确定删除吗？", "提示", MessageBoxButtons.YesNo);
+            if (result==DialogResult.Yes)
+            {
+                Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
+                urlBll.Delete(Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[0].Value));//id是自动生成的，应该不会有错
+                                                                                              //刷新
+                dgvTaskCapture.Rows.Clear();
+                List<Urlconfigs_k> urlList = null;
+                urlList = urlBll.GetModelList("");//后期改成分页的            
+                ListToDataGridView(dgvTaskCapture, urlList);
+            }
 
         }
 
@@ -732,6 +792,7 @@
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            //暂时20151204注释掉
             if (IsTaskOver())
             {
                 DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
