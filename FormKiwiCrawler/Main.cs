@@ -81,6 +81,29 @@
                         DataReceivedEventArgs dataReceived = DataReceivedEventArgs_Kiwi.Instance.DeQueue();
                         if (!String.IsNullOrEmpty(dataReceived.Html) && dataReceived.Html.Trim() != "")
                         {
+                            #region 辛苦了
+                            /*
+                            string a = "";
+                            int sum = 0;
+                            //1214
+                           
+                            if (dataReceived != null && !string.IsNullOrEmpty(dataReceived.Html))
+                            {
+                                MatchCollection mat_k = Regex.Matches(dataReceived.Html, "\"pic_completed\":(\\d+)", RegexOptions.IgnoreCase);
+                                foreach (Match item in mat_k)
+                                {
+                                    if (item.Success)
+                                    {
+                                        a = item.Groups[1].Value.ToString();
+                                        sum += Convert.ToInt32(a);
+
+                                    }
+                                }
+                                MessageBox.Show(sum.ToString());
+                            } 
+                            */
+                            #endregion
+                            //1214
                             WriteToFiles(dataReceived);
                         }
                     }
