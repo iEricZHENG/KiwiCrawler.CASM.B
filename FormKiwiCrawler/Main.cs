@@ -866,5 +866,22 @@
             }            
            
         }
+
+        #region 更新数据库数据
+        private void btnMD5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnIndexId_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDatetime_Click(object sender, EventArgs e)
+        {
+
+        } 
+        #endregion
     }
 }

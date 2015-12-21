@@ -139,6 +139,7 @@
   <ItemGroup>
     <Compile Include="HttpProc.cs" />
     <Compile Include="MailSender.cs" />
+    <Compile Include="MD5Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
