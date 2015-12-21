@@ -67,11 +67,9 @@
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.btnMD5 = new System.Windows.Forms.Button();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.btnIndexId = new System.Windows.Forms.Button();
-            this.btnDatetime = new System.Windows.Forms.Button();
+            this.btnUpdateDB = new System.Windows.Forms.Button();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -476,52 +474,30 @@
             this.tabPage3.Text = "辅助面板";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // btnMD5
+            // groupBox5
             // 
-            this.btnMD5.Location = new System.Drawing.Point(18, 37);
-            this.btnMD5.Name = "btnMD5";
-            this.btnMD5.Size = new System.Drawing.Size(113, 23);
-            this.btnMD5.TabIndex = 0;
-            this.btnMD5.Text = "添加MD5";
-            this.btnMD5.UseVisualStyleBackColor = true;
-            this.btnMD5.Click += new System.EventHandler(this.btnMD5_Click);
+            this.groupBox5.Controls.Add(this.btnUpdateDB);
+            this.groupBox5.Location = new System.Drawing.Point(104, 196);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(191, 170);
+            this.groupBox5.TabIndex = 1;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "更新数据";
+            // 
+            // btnUpdateDB
+            // 
+            this.btnUpdateDB.Location = new System.Drawing.Point(41, 74);
+            this.btnUpdateDB.Name = "btnUpdateDB";
+            this.btnUpdateDB.Size = new System.Drawing.Size(113, 23);
+            this.btnUpdateDB.TabIndex = 0;
+            this.btnUpdateDB.Text = "更新数据";
+            this.btnUpdateDB.UseVisualStyleBackColor = true;
+            this.btnUpdateDB.Click += new System.EventHandler(this.btnUpdateDB_Click);
             // 
             // timer
             // 
             this.timer.Interval = 2000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.btnDatetime);
-            this.groupBox5.Controls.Add(this.btnIndexId);
-            this.groupBox5.Controls.Add(this.btnMD5);
-            this.groupBox5.Location = new System.Drawing.Point(37, 67);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(216, 293);
-            this.groupBox5.TabIndex = 1;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "更新数据";
-            // 
-            // btnIndexId
-            // 
-            this.btnIndexId.Location = new System.Drawing.Point(18, 94);
-            this.btnIndexId.Name = "btnIndexId";
-            this.btnIndexId.Size = new System.Drawing.Size(113, 23);
-            this.btnIndexId.TabIndex = 1;
-            this.btnIndexId.Text = "添加IndexId";
-            this.btnIndexId.UseVisualStyleBackColor = true;
-            this.btnIndexId.Click += new System.EventHandler(this.btnIndexId_Click);
-            // 
-            // btnDatetime
-            // 
-            this.btnDatetime.Location = new System.Drawing.Point(18, 153);
-            this.btnDatetime.Name = "btnDatetime";
-            this.btnDatetime.Size = new System.Drawing.Size(113, 23);
-            this.btnDatetime.TabIndex = 2;
-            this.btnDatetime.Text = "添加更新时间";
-            this.btnDatetime.UseVisualStyleBackColor = true;
-            this.btnDatetime.Click += new System.EventHandler(this.btnDatetime_Click);
             // 
             // Main
             // 
@@ -596,10 +572,8 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.CheckBox ckbDetail2Mode;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button btnMD5;
+        private System.Windows.Forms.Button btnUpdateDB;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button btnDatetime;
-        private System.Windows.Forms.Button btnIndexId;
     }
 }
 

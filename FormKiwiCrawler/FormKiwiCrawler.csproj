@@ -131,6 +131,10 @@
       <Project>{38d7aa58-c95b-449b-86c6-a8073a56e11f}</Project>
       <Name>BLL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{e3d8759a-c5eb-402d-9f10-f5c6029a8d1a}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Crawler.Core\KiwiCrawler.Core.csproj">
       <Project>{bffa449a-fa5f-452f-984e-e2d426a1d3cf}</Project>
       <Name>KiwiCrawler.Core</Name>

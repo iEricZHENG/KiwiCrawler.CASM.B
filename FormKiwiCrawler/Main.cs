@@ -15,7 +15,7 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
-    
+
 
     public partial class Main : Form
     {
@@ -139,8 +139,8 @@
 
         private static void Master_CustomParseLinkEvent3(CustomParseLinkEvent3Args args)
         {
-           
-            
+
+
 
             #region 
             //
@@ -299,7 +299,7 @@
             fileId++;
 
             model.kNumber = fileId;
-            model.kNotes =configModel.kId+":"+configModel.kKeyWords;
+            model.kNotes = configModel.kId + ":" + configModel.kKeyWords;
             bll.Add(model);
             writeToLogView(dataReceived);
 
@@ -622,8 +622,8 @@
                 //获得锁定
                 //Kiwi-未测试的代码               
                 //处理上一个任务
-                 var compalte_k= (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value.ToString().TrimEnd('%')) / 100;
-                if ((compalte_k>= 0.9m) && (compalte_k <=1.0m))//先简单的这样控制一下。
+                var compalte_k = (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value.ToString().TrimEnd('%')) / 100;
+                if ((compalte_k >= 0.9m) && (compalte_k <= 1.0m))//先简单的这样控制一下。
                 {
                     MessageBox.Show("该任务抓取已经完成，请选择其他任务");
                 }
@@ -672,7 +672,7 @@
                         MessageBox.Show("抓取任务正在进行，请等待任务结束...");
                     }
                 }
-        
+
             }
 
         }
@@ -766,8 +766,8 @@
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            var result= MessageBox.Show("确定删除吗？", "提示", MessageBoxButtons.YesNo);
-            if (result==DialogResult.Yes)
+            var result = MessageBox.Show("确定删除吗？", "提示", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
             {
                 Urlconfigs_kBll urlBll = new Urlconfigs_kBll();
                 urlBll.Delete(Convert.ToInt32(dgvTaskCapture.SelectedRows[0].Cells[0].Value));//id是自动生成的，应该不会有错
@@ -854,7 +854,7 @@
         {
             if (!IsTaskOver())
             {
-                var result = MessageBox.Show("抓取任务正在执行强行关闭吗？", "提示",MessageBoxButtons.OKCancel);
+                var result = MessageBox.Show("抓取任务正在执行强行关闭吗？", "提示", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     System.Diagnostics.Process.GetCurrentProcess().Kill();//强行关闭所有进程
@@ -863,25 +863,29 @@
                 {
                     e.Cancel = true;//取消关闭操作
                 }
-            }            
-           
+            }
+
         }
 
         #region 更新数据库数据
-        private void btnMD5_Click(object sender, EventArgs e)
+        private void btnUpdateDB_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void btnIndexId_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnDatetime_Click(object sender, EventArgs e)
-        {
-
-        } 
+            Capturedata_kBll captureDataBll = new Capturedata_kBll();
+            List<Capturedata_k> list = new List<Capturedata_k>();
+            list = captureDataBll.GetModelList("");
+            Capturedata_k model = new Capturedata_k();
+            for (int i = 0; i < list.Count; i++)
+            {
+                model = list[i];                                
+                model.kPageMD5 = MD5Helper.MD5Helper.ComputeMd5String(model.kContent);
+                string temp = model.kNotes;                
+                temp = temp.Substring(0, temp.IndexOf(":"));
+                model.kIndexId = Convert.ToInt32(temp);
+                model.kUpdateTime = model.kCaptureDateTime;
+                captureDataBll.Update(model);                
+            }
+            MessageBox.Show("操作完成");            
+        }      
         #endregion
     }
 }
