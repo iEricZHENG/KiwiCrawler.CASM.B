@@ -15,6 +15,7 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
+    
 
     public partial class Main : Form
     {
@@ -847,6 +848,23 @@
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!IsTaskOver())
+            {
+                var result = MessageBox.Show("抓取任务正在执行强行关闭吗？", "提示",MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    System.Diagnostics.Process.GetCurrentProcess().Kill();//强行关闭所有进程
+                }
+                else
+                {
+                    e.Cancel = true;//取消关闭操作
+                }
+            }            
+           
         }
     }
 }
