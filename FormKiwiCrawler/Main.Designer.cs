@@ -67,6 +67,8 @@
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -79,6 +81,7 @@
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -86,6 +89,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -462,6 +466,26 @@
             this.timer.Interval = 2000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(1221, 528);
+            this.tabPage3.TabIndex = 4;
+            this.tabPage3.Text = "辅助面板";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(172, 223);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "添加MD5";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -489,6 +513,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -532,6 +557,8 @@
         private System.Windows.Forms.Button btnKillCurrentTask;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.CheckBox ckbDetail2Mode;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Button button1;
     }
 }
 
