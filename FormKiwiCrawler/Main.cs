@@ -300,6 +300,11 @@
 
             model.kNumber = fileId;
             model.kNotes = configModel.kId + ":" + configModel.kKeyWords;
+
+            model.kPageMD5 = MD5Helper.MD5Helper.ComputeMd5String(model.kContent);
+            model.kUpdateTime = model.kCaptureDateTime;
+            model.kIndexId = configModel.kId;
+
             bll.Add(model);
             writeToLogView(dataReceived);
 
