@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace FormKiwiCrawler
+namespace FormKiwiCrawler.B
 {
     static class Program
     {
@@ -15,7 +15,7 @@ namespace FormKiwiCrawler
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());//frmAdd//
+            Application.Run(new Form1());
         }
     }
 }
