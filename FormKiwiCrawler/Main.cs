@@ -15,7 +15,8 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
-
+    using zoyobar.shared.panzer.web.ib;
+    //using Microsoft.Xna.Framework;
 
     public partial class Main : Form
     {
@@ -34,6 +35,7 @@
         private static string strExit = "";
         private readonly static object locker = new object();
         private static CrawlMaster master;
+        private static IEBrowser ie;
         //private static bool isDetailMode2 = false;
         static Thread writeThread;
         //private static bool isKillTask;
@@ -106,6 +108,7 @@
                             #endregion
                             //1214
                             WriteToFiles(dataReceived);
+                            //20151222-->Kiwi:在这里扩展图片下载的功能
                         }
                     }
                     else
@@ -139,9 +142,6 @@
 
         private static void Master_CustomParseLinkEvent3(CustomParseLinkEvent3Args args)
         {
-
-
-
             #region 
             //
             #region 可以进一步修改
@@ -160,7 +160,6 @@
             CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
             CustomParseLink_NextPageSdau(args, configModel.kNextPagePattern, 1);//下一页                     
             #endregion
-
             #region  SDAU
             //CustomParseLink_MainList(args, "(view).+?([0-9]{5})");//去除,下一步，拼写一个大的正则表达式就好
             //CustomParseLink_NextPageSdau(args, "<a .+ href='(.+)'>下一页</a>", 1);//添加，下一步，拼写一个大的正则表达式就好 
@@ -289,22 +288,21 @@
 
         private static void WriteToFiles(DataReceivedEventArgs dataReceived)
         {
-
             KiwiCrawler.BLL.Capturedata_kBll bll = new KiwiCrawler.BLL.Capturedata_kBll();
             KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
             model.kCaptureDateTime = DateTime.Now;
+
+            //20151222-->在这里扩展类型B
+            //20151222-->end
             model.kContent = dataReceived.Html.Trim();
             model.kType = configModel.kAddressBusinessType.Trim();//民政部门；安全生产监督管理局；地震局
             model.kUrl = dataReceived.Url;
             fileId++;
-
             model.kNumber = fileId;
             model.kNotes = configModel.kId + ":" + configModel.kKeyWords;
-
             model.kPageMD5 = MD5Helper.MD5Helper.ComputeMd5String(model.kContent);
             model.kUpdateTime = model.kCaptureDateTime;
             model.kIndexId = configModel.kId;
-
             bll.Add(model);
             writeToLogView(dataReceived);
 
@@ -342,7 +340,7 @@
             Settings.Depth = Convert.ToByte(1000);//页码数+1
 
             // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
-            Settings.EscapeLinks.Add(".jpg");
+            //Settings.EscapeLinks.Add(".jpg");
 
             // 设置自动限速，1~5 秒随机间隔的自动限速
             Settings.AutoSpeedLimit = true;
@@ -691,6 +689,10 @@
             fileId = 0;
             //tempGridview = dgvTaskCapture;
             master = SetCrawler();
+
+            //20151222-->Kiwi
+            //ie = new IEBrowser(this.webBrowser);
+            //
             kiwiThreadStatus = master.ThreadStatus;
             strExit = "";
             timer.Start();//20151204暂时注释掉
@@ -881,16 +883,26 @@
             Capturedata_k model = new Capturedata_k();
             for (int i = 0; i < list.Count; i++)
             {
-                model = list[i];                                
+                model = list[i];
                 model.kPageMD5 = MD5Helper.MD5Helper.ComputeMd5String(model.kContent);
-                string temp = model.kNotes;                
+                string temp = model.kNotes;
                 temp = temp.Substring(0, temp.IndexOf(":"));
                 model.kIndexId = Convert.ToInt32(temp);
                 model.kUpdateTime = model.kCaptureDateTime;
-                captureDataBll.Update(model);                
+                captureDataBll.Update(model);
             }
-            MessageBox.Show("操作完成");            
-        }      
+            MessageBox.Show("操作完成");
+        }
         #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Capturedata_kBll bll = new Capturedata_kBll();
+            Capturedata_k model= bll.GetModelList("").FirstOrDefault();
+            //this.webBrowser.DocumentText = model.kContent;
+           
+            //this.webBrowser.NavigateToString(model.kContent);
+            //this.webBrowser.Document.Body.InnerHtml = model.kContent;
+        }
     }
 }

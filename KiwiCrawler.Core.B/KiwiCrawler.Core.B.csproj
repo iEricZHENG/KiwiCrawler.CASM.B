@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{216770A7-C4AF-4E99-9C40-4CC9F623AC72}</ProjectGuid>
+    <ProjectGuid>{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KiwiCrawler.Core.B</RootNamespace>

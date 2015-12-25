@@ -33,7 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\kiwi.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ConsoleControl, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -55,6 +56,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="zoyobar.shared.panzer.IEBrowser, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\zoyobar.shared.panzer.IEBrowser.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CrawlerConfigMode.cs" />
@@ -145,10 +150,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\AxInterop.SHDocVw.dll" />
     <Content Include="Lib\ConsoleControl.dll" />
+    <Content Include="Lib\Interop.SHDocVw.dll" />
+    <Content Include="Lib\Microsoft.mshtml.dll" />
     <Content Include="Lib\ProcessInterface.dll" />
-    <Content Include="Resources\kiwi.ico" />
-    <None Include="Resources\busy.gif" />
+    <Content Include="Lib\x32shdocvw.dll" />
+    <Content Include="Lib\zoyobar.shared.panzer.IEBrowser.dll" />
+    <Content Include="Lib\zoyobar.shared.panzer.IEBrowser.XML" />
+    <None Include="Resources\kiwi.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SHDocVw">
+      <Guid>{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
