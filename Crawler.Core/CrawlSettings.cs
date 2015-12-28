@@ -24,7 +24,7 @@ namespace KiwiCrawler.Core
         /// <summary>
         /// The depth（深度）.
         /// </summary>
-        private byte depth = 3;
+        private Int32 depth = 3;
 
         /// <summary>
         /// The lock host（锁定主机）.
@@ -87,7 +87,7 @@ namespace KiwiCrawler.Core
         /// Gets or sets the depth.
         /// 获取或设置深度。
         /// </summary>
-        public byte Depth
+        public Int32 Depth
         {
             get
             {

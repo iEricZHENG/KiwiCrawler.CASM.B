@@ -6,12 +6,8 @@
     using KiwiCrawler.Model;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Data;
     using System.Drawing;
-    using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Windows.Forms;
@@ -337,7 +333,7 @@
             Settings.ThreadCount = 1;
 
             // 设置爬取深度
-            Settings.Depth = Convert.ToByte(1000);//页码数+1
+            Settings.Depth = Convert.ToInt32(1000);//页码数+1
 
             // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
             //Settings.EscapeLinks.Add(".jpg");
@@ -368,11 +364,11 @@
             //深度
             if (radioDepthC.Checked && !(String.IsNullOrEmpty(txtDepth.Text.Trim())))
             {
-                Settings.Depth = Convert.ToByte(txtDepth.Text.Trim());
+                Settings.Depth = Convert.ToInt32(txtDepth.Text.Trim());
             }
             if (radioDepthM.Checked)
             {
-                Settings.Depth = configModel.kPageTotal == null ? Convert.ToByte(100) : Convert.ToByte(configModel.kPageTotal + 1);
+                Settings.Depth = configModel.kPageTotal == null ? Convert.ToInt32(100) : Convert.ToInt32(configModel.kPageTotal + 1);
             }
             //速度1~5
             if (radioSpeedNo.Checked)
@@ -514,15 +510,7 @@
         }
 
         #endregion
-        #region 窗体交互
-
-        private void btnAccessDB_Click(object sender, EventArgs e)
-        {
-            KiwiCrawler.BLL.Capturedata_kBll bll = new KiwiCrawler.BLL.Capturedata_kBll();
-            KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
-            MessageBox.Show(bll.GetMaxId().ToString());
-
-        }
+        #region 窗体交互     
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             TabPage focusPage = e.TabPage;
@@ -765,11 +753,6 @@
             model.kKeyWords = dgvTaskCapture.SelectedRows[0].Cells[10].Value.ToString().Trim();
             return model;
         }
-        /// <summary>
-        /// 删除
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
@@ -787,6 +770,8 @@
 
         }
 
+        #region 爬虫配置面板
+
         private void radioThreadM_CheckedChanged(object sender, EventArgs e)
         {
             txtThread.Enabled = !radioThreadM.Checked;
@@ -795,7 +780,8 @@
         private void radioDepthM_CheckedChanged(object sender, EventArgs e)
         {
             txtDepth.Enabled = !radioDepthM.Checked;
-        }
+        } 
+        #endregion
 
         private void btnComplate_Click(object sender, EventArgs e)
         {
@@ -813,13 +799,6 @@
                 }
             }
         }
-
-        //private void btnKillCurrentTask_Click(object sender, EventArgs e)
-        //{
-        //    isKillTask = true;
-        //}
-
-        #endregion
 
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -873,6 +852,9 @@
             }
 
         }
+        #endregion
+
+        #region 辅助面板代码
 
         #region 更新数据库数据
         private void btnUpdateDB_Click(object sender, EventArgs e)
@@ -898,11 +880,12 @@
         private void button1_Click(object sender, EventArgs e)
         {
             Capturedata_kBll bll = new Capturedata_kBll();
-            Capturedata_k model= bll.GetModelList("").FirstOrDefault();
+            Capturedata_k model = bll.GetModelList("").FirstOrDefault();
             //this.webBrowser.DocumentText = model.kContent;
-           
+
             //this.webBrowser.NavigateToString(model.kContent);
             //this.webBrowser.Document.Body.InnerHtml = model.kContent;
         }
+        #endregion
     }
 }

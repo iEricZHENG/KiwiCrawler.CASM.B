@@ -18,6 +18,7 @@ namespace KiwiCrawler.Core
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Windows.Forms;
 
     /// <summary>
     /// The crawl master.
@@ -61,6 +62,7 @@ namespace KiwiCrawler.Core
         /// </summary>
         private readonly bool[] threadStatus;
 
+        private WebBrowser wb;
         #endregion Fields
 
         #region Constructors and Destructors
@@ -72,6 +74,7 @@ namespace KiwiCrawler.Core
         /// 3.Settings
         /// 4.threads
         /// 5.threadStatus
+        /// 6.WebBrowser
         /// </summary>
         /// <param name="settings">
         /// The settings.
@@ -83,6 +86,9 @@ namespace KiwiCrawler.Core
             this.Settings = settings;
             this.threads = new Thread[settings.ThreadCount];
             this.threadStatus = new bool[settings.ThreadCount];
+            this.wb = new WebBrowser();
+            this.wb.ScriptErrorsSuppressed = true;//忽略脚本错误
+
         }
 
         #endregion Constructors and Destructors
@@ -108,7 +114,7 @@ namespace KiwiCrawler.Core
         /// 自定义超链接处理事件
         /// 主要处理UrlDictionary
         /// </summary>
-        public event CustomParseLinkEvent2Handler CustomParseLinkEvent2;
+        //public event CustomParseLinkEvent2Handler CustomParseLinkEvent2;
 
         public event CustomParseLinkEvent3Handler CustomParseLinkEvent3;
 
@@ -151,7 +157,7 @@ namespace KiwiCrawler.Core
         /// The stop.
         /// </summary>
         public void Stop()
-        {            
+        {
             foreach (Thread thread in this.threads)
             {
                 thread.Abort();
@@ -174,19 +180,19 @@ namespace KiwiCrawler.Core
         /// <param name="request">
         /// The request.
         /// </param>
-        private void ConfigRequest(HttpWebRequest request)
-        {
-            request.UserAgent = this.Settings.UserAgent;
-            request.CookieContainer = this.cookieContainer;
-            request.AllowAutoRedirect = true;
-            request.MediaType = "text/html";
-            request.Headers["Accept-Language"] = "zh-CN,zh;q=0.8";
+        //private void ConfigRequest(HttpWebRequest request)
+        //{
+        //    request.UserAgent = this.Settings.UserAgent;
+        //    request.CookieContainer = this.cookieContainer;
+        //    request.AllowAutoRedirect = true;
+        //    request.MediaType = "text/html";
+        //    request.Headers["Accept-Language"] = "zh-CN,zh;q=0.8";
 
-            if (this.Settings.Timeout > 0)
-            {
-                request.Timeout = this.Settings.Timeout;
-            }
-        }
+        //    if (this.Settings.Timeout > 0)
+        //    {
+        //        request.Timeout = this.Settings.Timeout;
+        //    }
+        //}
 
         /// <summary>
         /// The crawl process.
@@ -221,8 +227,8 @@ namespace KiwiCrawler.Core
 
                 UrlInfo urlInfo = UrlQueue.Instance.DeQueue();
 
-                HttpWebRequest request = null;
-                HttpWebResponse response = null;
+                //HttpWebRequest request = null;
+                //HttpWebResponse response = null;
 
                 try
                 {
@@ -238,6 +244,42 @@ namespace KiwiCrawler.Core
                         Thread.Sleep(span);
                     }
 
+
+                    #region A类型请求并获得返回数据
+                    if (wb != null)
+                    {
+                        //if (wb.IsBusy)
+                        //{
+                        //}
+                        //else
+                        //{
+                        //}
+                        //ConfigCookie();
+                        //ConfigCookie(urlInfo);
+                        wb.Navigate(urlInfo.UrlString);
+                        //wb.ReadyState == WebBrowserReadyState.Complete
+                        //(object sender, DocumentCompletedEventArgs)
+                        wb.DocumentCompleted += (a, b) =>
+                        {
+                            string html = wb.Document.Body.InnerHtml; /// 将流转化为字符串，包含了编码情况处理（如果页面有乱码，在这里处理）
+
+                            this.ParseLinks(urlInfo, html);//根据页面html和urlInfo，开启将链接添加到url爬行队列
+
+                            if (this.DataReceivedEvent != null)
+                            {
+                                //在这里得到了数据。
+                                this.DataReceivedEvent(
+                                    new DataReceivedEventArgs
+                                    {
+                                        Url = urlInfo.UrlString,
+                                        Depth = urlInfo.Depth,
+                                        Html = html,
+                                        browser = wb
+                                    });
+                            }
+                        };
+                    }
+                    /*
                     // 创建并配置Web请求
                     request = WebRequest.Create(urlInfo.UrlString) as HttpWebRequest;
                     this.ConfigRequest(request);//方法：引用参数的变身房。
@@ -283,27 +325,6 @@ namespace KiwiCrawler.Core
                                         Depth = urlInfo.Depth,
                                         Html = html
                                     });
-
-                                #region 20150930之前处理的方式
-
-                                /*20150930之前处理的方式
-                                                    if (this.CustomParseLinkEvent != null)
-                                                    {
-                                                        //自定义事件，将DataReceivedEventArgs传入，将处理过程暴露给外部，将自定义方法处理获得的UrlInfo（主要是url）加入队列
-                                                        var customUrlInfo = this.CustomParseLinkEvent(new DataReceivedEventArgs
-                                                        {
-                                                            Url = urlInfo.UrlString,
-                                                            Depth = urlInfo.Depth,
-                                                            Html = html
-                                                        });
-                                                        if (customUrlInfo != null)
-                                                        {
-                                                            UrlQueue.Instance.EnQueue(customUrlInfo);
-                                                        }
-                                                    }
-                                                    */
-
-                                #endregion 20150930之前处理的方式
                             }
 
                             if (stream != null)
@@ -311,7 +332,9 @@ namespace KiwiCrawler.Core
                                 stream.Close();
                             }
                         }
-                    }
+                    } 
+                    */
+                    #endregion
                 }
                 catch (Exception exception)
                 {
@@ -326,18 +349,36 @@ namespace KiwiCrawler.Core
                 }
                 finally
                 {
-                    if (request != null)
-                    {
-                        request.Abort();
-                    }
+                    //if (request != null)
+                    //{
+                    //    request.Abort();
+                    //}
 
-                    if (response != null)
-                    {
-                        response.Close();
-                    }
+                    //if (response != null)
+                    //{
+                    //    response.Close();
+                    //}
                 }
             }
         }
+
+        private void ConfigCookie(UrlInfo urlInfo)
+        {
+            Uri uri = new Uri(urlInfo.UrlString);
+            CookieCollection cookies = this.cookieContainer.GetCookies(uri);
+            StringBuilder sb = new StringBuilder("");
+            foreach (var item in cookies)
+            {
+                sb.Append(item);
+                sb.Append(";");
+            }
+            this.wb.Document.Cookie = sb.ToString();
+        }
+
+        //private void Wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        //{
+
+        //}
 
         /// <summary>
         /// The parse links.
@@ -578,6 +619,7 @@ namespace KiwiCrawler.Core
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
+        /*
         private string ParseContent(Stream stream, string characterSet)
         {
             var memoryStream = new MemoryStream();
@@ -626,7 +668,7 @@ namespace KiwiCrawler.Core
 
             return encode.GetString(buffer);
         }
-
+        */
         /// <summary>
         /// The persistence（维持） cookie.
         /// 维持cookie

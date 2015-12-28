@@ -16,14 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormKiwiCrawler", "FormKiwi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiwiCrawler.Core", "Crawler.Core\KiwiCrawler.Core.csproj", "{BFFA449A-FA5F-452F-984E-E2D426A1D3CF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kiwi.Crawler.A", "Kiwi.Crawler.A", "{7E216353-23BF-4553-94BF-F710F9472A89}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kiwi.Crawler.B", "Kiwi.Crawler.B", "{772F5DF5-D12C-4B71-83FF-C6DF73C28F78}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormKiwiCrawler.B", "FormKiwiCrawler.B\FormKiwiCrawler.B.csproj", "{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KiwiCrawler.Core.B", "KiwiCrawler.Core.B\KiwiCrawler.Core.B.csproj", "{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -134,46 +126,8 @@ Global
 		{BFFA449A-FA5F-452F-984E-E2D426A1D3CF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BFFA449A-FA5F-452F-984E-E2D426A1D3CF}.Release|x86.ActiveCfg = Release|Any CPU
 		{BFFA449A-FA5F-452F-984E-E2D426A1D3CF}.Release|x86.Build.0 = Release|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|.NET.Build.0 = Debug|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|x86.ActiveCfg = Debug|x86
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Debug|x86.Build.0 = Debug|x86
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|.NET.ActiveCfg = Release|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|.NET.Build.0 = Release|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|x86.ActiveCfg = Release|x86
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C}.Release|x86.Build.0 = Release|x86
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|.NET.Build.0 = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Debug|x86.Build.0 = Debug|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|.NET.ActiveCfg = Release|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|.NET.Build.0 = Release|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|x86.ActiveCfg = Release|Any CPU
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{7F390848-06E9-4320-A4F7-F90B9CCE14AA} = {7E216353-23BF-4553-94BF-F710F9472A89}
-		{BFFA449A-FA5F-452F-984E-E2D426A1D3CF} = {7E216353-23BF-4553-94BF-F710F9472A89}
-		{96BBF57B-02FA-4AF7-94F0-418E3E0E5E6C} = {772F5DF5-D12C-4B71-83FF-C6DF73C28F78}
-		{6DC05180-3CB4-4BAF-AE22-1E85CFC02DED} = {772F5DF5-D12C-4B71-83FF-C6DF73C28F78}
 	EndGlobalSection
 EndGlobal

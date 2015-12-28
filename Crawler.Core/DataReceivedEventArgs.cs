@@ -10,6 +10,7 @@
 namespace KiwiCrawler.Core
 {
     using System;
+    using System.Windows.Forms;
 
     /// <summary>
     /// The data received event handler.
@@ -40,6 +41,8 @@ namespace KiwiCrawler.Core
         /// Gets or sets the url.
         /// </summary>
         public string Url { get; set; }
+
+        public WebBrowser browser { get; set; }
 
         #endregion
     }
