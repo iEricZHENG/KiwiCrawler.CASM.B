@@ -32,6 +32,7 @@
         private readonly static object locker = new object();
         private static CrawlMaster master;
         private static IEBrowser ie;
+        private static DataGridViewRow taskDataGridRow;
         //private static bool isDetailMode2 = false;
         static Thread writeThread;
         //private static bool isKillTask;
@@ -151,10 +152,40 @@
             //    CustomParseLink_MainList(args, configModel.kDetailPattern);//什么都不匹配
             //} 
             #endregion
-            //
-            CustomParseLink_MainList(args, "什么都不匹配什么都不匹配什么都不匹配什么都不匹配");//什么都不匹配
-            CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
-            CustomParseLink_NextPageSdau(args, configModel.kNextPagePattern, 1);//下一页                     
+            //            
+            //string detailPatternType= taskDataGridRow.Cells[4].Value.ToString().Trim();
+            //详细页
+            switch (configModel.kDetailPatternType)
+            {
+                case "正则表达式":
+                    CustomParseLink_MainList(args, "什么都不匹配什么都不匹配什么都不匹配什么都不匹配");//什么都不匹配
+                    CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);//kiwi-下一步configModel添加组号这个参数。
+                    break;
+                case "Dom元素":
+                case "Dom元素属性":
+                    //CustomParseLink_MainListTypeB(args, configModel.kDetailPattern);
+                    CustomParseLink_MainListMode2(args, configModel.kDetailPattern,0);
+                    break;
+                case "JavaScript代码":
+                    break;
+                default:
+                    break;
+            }
+            // string nextPagePatternType = taskDataGridRow.Cells[7].Value.ToString().Trim();
+            switch (configModel.kNextPagePatternType)
+            {
+                case "正则表达式":
+                    CustomParseLink_NextPageSdau(args, configModel.kNextPagePattern, 1);//下一页            
+                    break;
+                case "Dom元素":
+                case "Dom元素属性":
+                    //CustomParseLink_NextPageTypeB(args, configModel.kNextPagePattern);//第二种类型 下一页      
+                    break;
+                case "JavaScript代码":
+                    break;
+                default:
+                    break;
+            }
             #endregion
             #region  SDAU
             //CustomParseLink_MainList(args, "(view).+?([0-9]{5})");//去除,下一步，拼写一个大的正则表达式就好
@@ -189,6 +220,85 @@
             //CustomParseLink_NextPageSdau(args, "<a href='(.+)' class='aNxt'>下一页 &gt;</a>", 1);
             //CustomParseLink_NextPageSdau(args, "http://beijing.anjuke.com/prop/view/.*commsearch_p", 0); 
             #endregion
+        }
+        private static void Master_DynamicGoNextPageEvent(DynamicGoNextPageEventArgs args)
+        {
+            switch (configModel.kNextPagePatternType)
+            {
+                case "Dom元素":
+                case "Dom元素属性":
+                    CustomParseLink_DynamicGoNextPage(args, configModel.kNextPagePattern);//第二种类型 下一页      
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static void CustomParseLink_DynamicGoNextPage(DynamicGoNextPageEventArgs args, string kNextPagePattern)
+        {
+            string flag = kNextPagePattern;
+            WebBrowser wb = args.WorkBrowser;
+            if (args.PageIndex==1)
+            {
+                wb.Navigate(args.UrlInfo.UrlString);
+            }
+
+            if (!string.IsNullOrEmpty(flag))//用正则表达式验证一下。
+            {
+                HtmlDocument dom = wb.Document;
+                HtmlElement nextPage = null;
+                foreach (HtmlElement element in dom.All) //轮循
+                {
+                    if (element.Id == flag || element.InnerText == flag)
+                    {
+                        nextPage = element;
+                    }
+                }
+                if (nextPage != null)
+                {
+                    nextPage.InvokeMember("click"); //触发
+                    
+                }
+            }
+        }
+        /*
+        private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args, string kDetailPattern)
+        {
+            WebBrowser wb = args.browser;
+            
+            //HtmlAgilityPack.HtmlNode a = new HtmlAgilityPack.HtmlNode();
+
+            //HtmlElement a = new HtmlElement()
+            //.Document.CreateElement
+            //通过xpath定位到WebBrowser中的元素，用WebBrowser激发该元素的点击事件。
+            //思路：通过HtmlAgilityPack加载WebBrowser中的HTML，通过HtmlAgilityPack+xpath确定元素,
+            //拿到元素后获得元素的html，使用WebBrowser.Document的CreateElement为html无中生有创建该元素，选择赋予标志性属性id
+            //执行无中生有的元素的点击事件       
+        }
+        */
+        private static void CustomParseLink_NextPageTypeB(CustomParseLinkEvent3Args args, string kNextPagePattern)
+        {
+            //throw new NotImplementedException();
+            string flag = kNextPagePattern;
+            WebBrowser wb = args.browser;
+            if (!string.IsNullOrEmpty(flag))//用正则表达式验证一下。
+            {
+                HtmlDocument dom = wb.Document;
+                HtmlElement nextPage = null;
+                foreach (HtmlElement element in dom.All) //轮循
+                {
+                    if (element.Id == flag || element.InnerText == flag)
+                    {
+                        nextPage = element;
+                    }
+                }
+                if (nextPage != null)
+                {
+                    nextPage.InvokeMember("click"); //触发
+                    //args.UrlDictionary.Add(wb.Url.ToString(),Guid.NewGuid().ToString());
+                }
+            }
+
         }
 
         private static void CustomParseLink_MainListMode2(CustomParseLinkEvent3Args args, string kDetailPattern, int groupIndex)
@@ -450,7 +560,7 @@
             // master.CustomParseLinkEvent2 += Master_CustomParseLinkEvent2;
             master.CustomParseLinkEvent3 += Master_CustomParseLinkEvent3;
             //master.CustomParseLinkEvent3 += Master_Over;
-
+            master.DynamicGoNextPageEvent += Master_DynamicGoNextPageEvent;
             return master;
         }
 
@@ -504,6 +614,7 @@
             if (e != null)
             {
                 dgvTaskCapture.Tag = e;
+                taskDataGridRow = dgvTaskCapture.Rows[e.RowIndex];
                 dgvTaskCapture.Rows[e.RowIndex].DefaultCellStyle = new DataGridViewCellStyle() { BackColor = Color.GreenYellow };
                 dgvTaskCapture.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "正在抓取";
             }
@@ -718,7 +829,16 @@
                 urlList = urlBll.GetModelList("");//后期改成分页的          
                 ListToDataGridView(dgvTaskCapture, urlList);
             }
-
+            //SetWorkingState()
+            DataGridViewCellEventArgs focus = dgvTaskCapture.Tag as DataGridViewCellEventArgs;
+            if (IsTaskOver())
+            {
+                DeWorkingState(focus);
+            }
+            else
+            {
+                SetWorkingState(focus);
+            }
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
@@ -780,7 +900,7 @@
         private void radioDepthM_CheckedChanged(object sender, EventArgs e)
         {
             txtDepth.Enabled = !radioDepthM.Checked;
-        } 
+        }
         #endregion
 
         private void btnComplate_Click(object sender, EventArgs e)

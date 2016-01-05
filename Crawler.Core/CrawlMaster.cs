@@ -9,6 +9,7 @@
 
 namespace KiwiCrawler.Core
 {
+    using Crawler.Core;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -62,7 +63,8 @@ namespace KiwiCrawler.Core
         /// </summary>
         private readonly bool[] threadStatus;
 
-        private WebBrowser wb;
+        private WebBrowser detailBrowser;
+        private WebBrowser nextPageBrowser;
         #endregion Fields
 
         #region Constructors and Destructors
@@ -86,8 +88,10 @@ namespace KiwiCrawler.Core
             this.Settings = settings;
             this.threads = new Thread[settings.ThreadCount];
             this.threadStatus = new bool[settings.ThreadCount];
-            this.wb = new WebBrowser();
-            this.wb.ScriptErrorsSuppressed = true;//忽略脚本错误
+            this.detailBrowser = new WebBrowser();
+            this.detailBrowser.ScriptErrorsSuppressed = true;//忽略脚本错误
+            this.nextPageBrowser = new WebBrowser();
+            this.nextPageBrowser.ScriptErrorsSuppressed = true;
 
         }
 
@@ -117,6 +121,7 @@ namespace KiwiCrawler.Core
         //public event CustomParseLinkEvent2Handler CustomParseLinkEvent2;
 
         public event CustomParseLinkEvent3Handler CustomParseLinkEvent3;
+        public event DynamicGoNextPageEventHandler DynamicGoNextPageEvent;
 
         #endregion Public Events
 
@@ -205,25 +210,50 @@ namespace KiwiCrawler.Core
             var currentThreadIndex = (int)threadIndex;
             while (true)
             {
+                if (UrlQueue.Instance.Count == 0)
+                {
+
+                    DynamicGoNextPageEvent(new DynamicGoNextPageEventArgs// 在这里自定义处理点击
+                    {
+                        UrlInfo = new UrlInfo(Settings.SeedsAddress[0]),
+                        WorkBrowser = nextPageBrowser,
+                        PageIndex = 1
+                    });//这个事件执行完，UrlQueue.Instance里应该有数据了
+                    continue;
+                }
                 // 根据队列中的 Url 数量和空闲线程的数量，判断线程是睡眠还是退出
                 if (UrlQueue.Instance.Count == 0)
                 {
+                    #region 退出
                     this.ThreadStatus[currentThreadIndex] = true;
-                    if (!this.ThreadStatus.Any(t => t == false))
+                    if (!this.ThreadStatus.Any(t => t == false))//退出，都是true结束
                     {
                         break;
                     }
+                    #endregion
 
-                    Thread.Sleep(2000);
-                    continue;
+                    #region 睡一下，下一轮继续
+                    Thread.Sleep(2000);//睡眠
+                    continue; 
+                    #endregion
                 }
 
                 this.ThreadStatus[currentThreadIndex] = false;
 
+                #region 移动的代码
+                /*
                 if (UrlQueue.Instance.Count == 0)
                 {
+
+                    DynamicGoNextPageEvent(new DynamicGoNextPageEventArgs
+                    {
+                        UrlInfo = new UrlInfo(Settings.SeedsAddress[0]),
+                        WorkBrowser = wb
+                    });//这个事件执行完，UrlQueue.Instance里应该有数据了
                     continue;
-                }
+                } 
+                */
+                #endregion
 
                 UrlInfo urlInfo = UrlQueue.Instance.DeQueue();
 
@@ -246,7 +276,10 @@ namespace KiwiCrawler.Core
 
 
                     #region A类型请求并获得返回数据
-                    if (wb != null)
+
+                    #region B类型浏览器请求并返回数据
+                    
+                    if (detailBrowser != null)
                     {
                         //if (wb.IsBusy)
                         //{
@@ -256,12 +289,13 @@ namespace KiwiCrawler.Core
                         //}
                         //ConfigCookie();
                         //ConfigCookie(urlInfo);
-                        wb.Navigate(urlInfo.UrlString);
+                        //处理点击与处理请求详细页的浏览器必须不是同一个实例
+                        detailBrowser.Navigate(urlInfo.UrlString);
                         //wb.ReadyState == WebBrowserReadyState.Complete
                         //(object sender, DocumentCompletedEventArgs)
-                        wb.DocumentCompleted += (a, b) =>
+                        detailBrowser.DocumentCompleted += (a, b) =>
                         {
-                            string html = wb.Document.Body.InnerHtml; /// 将流转化为字符串，包含了编码情况处理（如果页面有乱码，在这里处理）
+                            string html = detailBrowser.Document.Body.InnerHtml; /// 将流转化为字符串，包含了编码情况处理（如果页面有乱码，在这里处理）
 
                             this.ParseLinks(urlInfo, html);//根据页面html和urlInfo，开启将链接添加到url爬行队列
 
@@ -273,12 +307,14 @@ namespace KiwiCrawler.Core
                                     {
                                         Url = urlInfo.UrlString,
                                         Depth = urlInfo.Depth,
-                                        Html = html,
-                                        browser = wb
+                                        Html = html
+                                        //browser = detailBrowser
                                     });
                             }
                         };
-                    }
+                    } 
+                    
+                    #endregion
                     /*
                     // 创建并配置Web请求
                     request = WebRequest.Create(urlInfo.UrlString) as HttpWebRequest;
@@ -372,7 +408,7 @@ namespace KiwiCrawler.Core
                 sb.Append(item);
                 sb.Append(";");
             }
-            this.wb.Document.Cookie = sb.ToString();
+            this.detailBrowser.Document.Cookie = sb.ToString();
         }
 
         //private void Wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -426,7 +462,8 @@ namespace KiwiCrawler.Core
                 {
                     UrlInfo = urlInfo,
                     UrlDictionary = urlDictionary,
-                    Html = html
+                    Html = html,
+                    browser = detailBrowser
                 };//1、urlInfo原始信息；2、初步解析后的html信息；3、初步解析得到的url集合
 
                 #region 被升级的代码

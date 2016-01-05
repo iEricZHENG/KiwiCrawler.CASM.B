@@ -41,6 +41,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\ConsoleControl.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="ProcessInterface, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\ProcessInterface.dll</HintPath>
@@ -62,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\NextPageHelper.cs" />
     <Compile Include="CrawlerConfigMode.cs" />
     <Compile Include="frmAdd.cs">
       <SubType>Form</SubType>
@@ -152,6 +157,7 @@
   <ItemGroup>
     <Content Include="Lib\AxInterop.SHDocVw.dll" />
     <Content Include="Lib\ConsoleControl.dll" />
+    <Content Include="Lib\HtmlAgilityPack.dll" />
     <Content Include="Lib\Interop.SHDocVw.dll" />
     <Content Include="Lib\Microsoft.mshtml.dll" />
     <Content Include="Lib\ProcessInterface.dll" />

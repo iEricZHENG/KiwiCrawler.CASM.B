@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Windows.Forms;
 
     public delegate Dictionary<string, string> CustomParseLinkEvent2Handler(CustomParseLinkEvent2Args args);
 
@@ -27,6 +28,7 @@
         public Dictionary<string, string> UrlDictionary { get; set; }
 
         public string Html { get; set; }
+        public WebBrowser browser { get; set; }
 
         #endregion Public Properties
     }

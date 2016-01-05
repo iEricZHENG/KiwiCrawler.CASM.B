@@ -52,6 +52,7 @@
     <Compile Include="CustomParseLinkEvent2Args.cs" />
     <Compile Include="CustomParseLinkEventArgs.cs" />
     <Compile Include="DataReceivedEventArgs.cs" />
+    <Compile Include="DynamicGoNextPageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityQueue.cs" />
     <Compile Include="UrlInfo.cs" />

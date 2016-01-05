@@ -42,7 +42,7 @@ namespace KiwiCrawler.Core
         /// </summary>
         public string Url { get; set; }
 
-        public WebBrowser browser { get; set; }
+        //public WebBrowser browser { get; set; }
 
         #endregion
     }
