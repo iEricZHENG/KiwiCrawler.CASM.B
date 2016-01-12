@@ -30,8 +30,8 @@
         private static bool isWriteTaskOver = true;
         private static string strExit = "";
         private readonly static object locker = new object();
-        private static CrawlMaster master;
-        private static IEBrowser ie;
+        private static CrawlMaster master;        
+        //private static WebBrowser wb;
         private static DataGridViewRow taskDataGridRow;
         //private static bool isDetailMode2 = false;
         static Thread writeThread;
@@ -44,6 +44,9 @@
             tabPage4.Controls.Add(kiwiConsole);
             kiwiConsole.Dock = DockStyle.Fill;
             kiwiConsole.Show();
+            webBrowser.ScriptErrorsSuppressed = true;
+            //wb = new WebBrowser();
+            //wb.ScriptErrorsSuppressed = false;
         }
         #region 事件
         private static bool MasterAddUrlEvent(AddUrlEventArgs args)
@@ -158,13 +161,13 @@
             switch (configModel.kDetailPatternType)
             {
                 case "正则表达式":
-                    CustomParseLink_MainList(args, "什么都不匹配什么都不匹配什么都不匹配什么都不匹配");//什么都不匹配
+                    //CustomParseLink_MainList(args, "什么都不匹配什么都不匹配什么都不匹配什么都不匹配");//什么都不匹配
                     CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);//kiwi-下一步configModel添加组号这个参数。
                     break;
                 case "Dom元素":
                 case "Dom元素属性":
                     //CustomParseLink_MainListTypeB(args, configModel.kDetailPattern);
-                    CustomParseLink_MainListMode2(args, configModel.kDetailPattern,0);
+                    //CustomParseLink_MainListMode2(args, configModel.kDetailPattern, 0);
                     break;
                 case "JavaScript代码":
                     break;
@@ -221,85 +224,23 @@
             //CustomParseLink_NextPageSdau(args, "http://beijing.anjuke.com/prop/view/.*commsearch_p", 0); 
             #endregion
         }
-        private static void Master_DynamicGoNextPageEvent(DynamicGoNextPageEventArgs args)
-        {
-            switch (configModel.kNextPagePatternType)
-            {
-                case "Dom元素":
-                case "Dom元素属性":
-                    CustomParseLink_DynamicGoNextPage(args, configModel.kNextPagePattern);//第二种类型 下一页      
-                    break;
-                default:
-                    break;
-            }
-        }
 
-        private static void CustomParseLink_DynamicGoNextPage(DynamicGoNextPageEventArgs args, string kNextPagePattern)
-        {
-            string flag = kNextPagePattern;
-            WebBrowser wb = args.WorkBrowser;
-            if (args.PageIndex==1)
-            {
-                wb.Navigate(args.UrlInfo.UrlString);
-            }
-
-            if (!string.IsNullOrEmpty(flag))//用正则表达式验证一下。
-            {
-                HtmlDocument dom = wb.Document;
-                HtmlElement nextPage = null;
-                foreach (HtmlElement element in dom.All) //轮循
-                {
-                    if (element.Id == flag || element.InnerText == flag)
-                    {
-                        nextPage = element;
-                    }
-                }
-                if (nextPage != null)
-                {
-                    nextPage.InvokeMember("click"); //触发
-                    
-                }
-            }
-        }
         /*
-        private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args, string kDetailPattern)
-        {
-            WebBrowser wb = args.browser;
-            
-            //HtmlAgilityPack.HtmlNode a = new HtmlAgilityPack.HtmlNode();
+private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args, string kDetailPattern)
+{
+   WebBrowser wb = args.browser;
 
-            //HtmlElement a = new HtmlElement()
-            //.Document.CreateElement
-            //通过xpath定位到WebBrowser中的元素，用WebBrowser激发该元素的点击事件。
-            //思路：通过HtmlAgilityPack加载WebBrowser中的HTML，通过HtmlAgilityPack+xpath确定元素,
-            //拿到元素后获得元素的html，使用WebBrowser.Document的CreateElement为html无中生有创建该元素，选择赋予标志性属性id
-            //执行无中生有的元素的点击事件       
-        }
-        */
-        private static void CustomParseLink_NextPageTypeB(CustomParseLinkEvent3Args args, string kNextPagePattern)
-        {
-            //throw new NotImplementedException();
-            string flag = kNextPagePattern;
-            WebBrowser wb = args.browser;
-            if (!string.IsNullOrEmpty(flag))//用正则表达式验证一下。
-            {
-                HtmlDocument dom = wb.Document;
-                HtmlElement nextPage = null;
-                foreach (HtmlElement element in dom.All) //轮循
-                {
-                    if (element.Id == flag || element.InnerText == flag)
-                    {
-                        nextPage = element;
-                    }
-                }
-                if (nextPage != null)
-                {
-                    nextPage.InvokeMember("click"); //触发
-                    //args.UrlDictionary.Add(wb.Url.ToString(),Guid.NewGuid().ToString());
-                }
-            }
+   //HtmlAgilityPack.HtmlNode a = new HtmlAgilityPack.HtmlNode();
 
-        }
+   //HtmlElement a = new HtmlElement()
+   //.Document.CreateElement
+   //通过xpath定位到WebBrowser中的元素，用WebBrowser激发该元素的点击事件。
+   //思路：通过HtmlAgilityPack加载WebBrowser中的HTML，通过HtmlAgilityPack+xpath确定元素,
+   //拿到元素后获得元素的html，使用WebBrowser.Document的CreateElement为html无中生有创建该元素，选择赋予标志性属性id
+   //执行无中生有的元素的点击事件       
+}
+*/
+
 
         private static void CustomParseLink_MainListMode2(CustomParseLinkEvent3Args args, string kDetailPattern, int groupIndex)
         {
@@ -319,7 +260,11 @@
                                                                      //如果不包含http，则认为超链接是相对路径，根据baseUrl建立绝对路径
                         url = currentUri.AbsoluteUri;
                         //Console.WriteLine("######" + url + "######");
-                        args.UrlDictionary.Add(url, Guid.NewGuid().ToString());
+                        if (!args.UrlDictionary.ContainsKey(url))
+                        {
+                            args.UrlDictionary.Add(url, Guid.NewGuid().ToString());
+                        }
+
                     }
                 }
             }
@@ -351,12 +296,16 @@
                     //如果不包含http，则认为超链接是相对路径，根据baseUrl建立绝对路径
                     url = currentUri.AbsoluteUri;
                     //Console.WriteLine("######" + url + "######");
-                    args.UrlDictionary.Add(url, Guid.NewGuid().ToString());
+                    if (!args.UrlDictionary.ContainsKey(url))
+                    {
+                        args.UrlDictionary.Add(url, Guid.NewGuid().ToString());
+                    }
+
                 }
             }
             //return args.UrlDictionary;
         }
-
+        /* B中已经不需要了
         /// <summary>
         /// 处理UrlDictionary，筛选+做的是减法
         /// </summary>
@@ -382,35 +331,61 @@
             }
             args.UrlDictionary = temp;
         }
-
+        */
         #endregion
         #region 方法-静态=》数据输出
-        private static void writeToLogView(DataReceivedEventArgs dataReceived)
+        private static void writeToLogView(DataReceivedEventArgs dataReceived, String str)
         {
             //Kiwi-log         
 
-            kiwiConsole.WriteOutput(DateTime.Now.ToString() + " -" + fileId + "-【" + Thread.CurrentThread.ManagedThreadId + "】-" + dataReceived.Url + "\r\n", Color.Green);
+            kiwiConsole.WriteOutput(DateTime.Now.ToString() + " -" + fileId + "-【" + Thread.CurrentThread.ManagedThreadId + "】-" + "【" + str + "】" + dataReceived.Url + "\r\n", Color.Green);
         }
 
         private static void WriteToFiles(DataReceivedEventArgs dataReceived)
         {
             KiwiCrawler.BLL.Capturedata_kBll bll = new KiwiCrawler.BLL.Capturedata_kBll();
             KiwiCrawler.Model.Capturedata_k model = new KiwiCrawler.Model.Capturedata_k();
-            model.kCaptureDateTime = DateTime.Now;
-
-            //20151222-->在这里扩展类型B
-            //20151222-->end
             model.kContent = dataReceived.Html.Trim();
-            model.kType = configModel.kAddressBusinessType.Trim();//民政部门；安全生产监督管理局；地震局
-            model.kUrl = dataReceived.Url;
-            fileId++;
-            model.kNumber = fileId;
-            model.kNotes = configModel.kId + ":" + configModel.kKeyWords;
-            model.kPageMD5 = MD5Helper.MD5Helper.ComputeMd5String(model.kContent);
-            model.kUpdateTime = model.kCaptureDateTime;
-            model.kIndexId = configModel.kId;
-            bll.Add(model);
-            writeToLogView(dataReceived);
+            model.kPageMD5 = MD5Helper.MD5Helper.ComputeMd5String(model.kContent);//获得MD5值            
+            //判断是否存在MD5值，存在不处理-->说明：该页面已经存在且无变化
+            //                 不存在    -->URL是否存在？-->存在-->更新了
+            //                                          -->不存在-->新添加的
+            KiwiCrawler.Model.Capturedata_k getModel = bll.GetModelList("kPageMD5='" + model.kPageMD5 + "'").FirstOrDefault();
+            if (getModel == null)//不存在
+            {
+                model.kUrl = dataReceived.Url;
+                getModel = bll.GetModelList("kUrl=" + "'" + model.kUrl + "'").FirstOrDefault();
+                if (getModel != null)//更新了
+                {
+                    getModel.kContent = model.kContent;
+                    getModel.kExtracted = 0;
+                    getModel.kPageMD5 = model.kPageMD5;
+                    getModel.kUpdateTime = DateTime.Now;
+                    getModel.kIsUpdated = 1;
+                    //添加一个字段
+                    bll.Update(getModel);
+                    writeToLogView(dataReceived, "更新");
+                }
+                else//新添加的==>扫描之后，有新添加的数据，完成度如何更新
+                {
+                    model.kCaptureDateTime = DateTime.Now;
+                    model.kType = configModel.kAddressBusinessType.Trim();//民政部门；安全生产监督管理局；地震局                    
+                    fileId++;
+                    model.kNumber = fileId;
+                    model.kExtracted = 0;
+                    model.kNotes = configModel.kId + ":" + configModel.kKeyWords;
+                    model.kUpdateTime = model.kCaptureDateTime;
+                    model.kIndexId = configModel.kId;
+                    model.kIsUpdated = 0;
+                    bll.Add(model);
+                    writeToLogView(dataReceived, "添加");
+                }
+            }
+            else
+            {
+                writeToLogView(dataReceived, "存在");
+            }
+
 
         }
         #endregion
@@ -438,19 +413,14 @@
             // 设置 URL 关键字
             //Settings.HrefKeywords.Add(string.Format("/{0}/bj", CityName));
             //config对象里的kKeyWord属性跟这里的URL关键字不是一回事
-
             // 设置爬取线程个数
             Settings.ThreadCount = 1;
-
             // 设置爬取深度
             Settings.Depth = Convert.ToInt32(1000);//页码数+1
-
             // 设置爬取时忽略的 Link，通过后缀名的方式，可以添加多个
             //Settings.EscapeLinks.Add(".jpg");
-
             // 设置自动限速，1~5 秒随机间隔的自动限速
             Settings.AutoSpeedLimit = true;
-
             // 设置都是锁定域名,去除二级域名后，判断域名是否相等，相等则认为是同一个站点
             // 例如：mail.pzcast.com 和 www.pzcast.com
             Settings.LockHost = false;
@@ -552,27 +522,14 @@
 
         private static CrawlMaster SetCrawler()
         {
-            //SettingDefaultValues();
-            //SettingCustomValues();
             var master = new CrawlMaster(Settings);
             master.AddUrlEvent += MasterAddUrlEvent;
             master.DataReceivedEvent += MasterDataReceivedEvent;
-            // master.CustomParseLinkEvent2 += Master_CustomParseLinkEvent2;
             master.CustomParseLinkEvent3 += Master_CustomParseLinkEvent3;
-            //master.CustomParseLinkEvent3 += Master_Over;
             master.DynamicGoNextPageEvent += Master_DynamicGoNextPageEvent;
             return master;
         }
-
-        //private static void Master_Over(CustomParseLinkEvent3Args args)
-        //{
-        //    if (isKillTask)
-        //    {
-        //        args.UrlDictionary.Clear();                
-        //    }
-        //}
         #endregion
-
         #region 方法=》状态控制
         private static bool IsCaptureTaskOver()
         {
@@ -742,35 +699,6 @@
                     }
                     else
                     {
-                        #region 停止程序的代码 
-                        //isWriteTaskOver = true;
-                        //if (master != null)
-                        //{
-                        //    master.Stop();
-                        //    master = null;
-                        //}
-                        //while (DataReceivedEventArgs_Kiwi.Instance.Count > 0)
-                        //{
-                        //    DataReceivedEventArgs_Kiwi.Instance.DeQueue();
-                        //}
-                        //writeThread.Abort();
-                        ////while (ContentQueue_Kiwi.Instance.Count>0)
-                        ////{
-                        ////    ContentQueue_Kiwi.Instance.DeQueue();
-                        ////}                        
-
-                        //if (IsTaskOver())
-                        //{
-                        //    if (SettingCustomValues(0))
-                        //    {
-                        //        RunNewTask(e);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    MessageBox.Show("请稍等，正在终止任务...");
-                        //} 
-                        #endregion
                         MessageBox.Show("抓取任务正在进行，请等待任务结束...");
                     }
                 }
@@ -794,22 +722,14 @@
             //
             kiwiThreadStatus = master.ThreadStatus;
             strExit = "";
-            timer.Start();//20151204暂时注释掉
+            //timer.Start();//20160111暂时注释掉
             //isKillTask = false;
             isWriteTaskOver = false;
             for (int i = 0; i < kiwiThreadStatus.Count(); i++)
             {
                 strExit += "true";
             }
-            //if (ckbDetail2Mode.Checked)
-            //{
-            //    isDetailMode2 = true;
-            //}
-            //else
-            //{
-            //    isDetailMode2 = false;
-            //}
-
+            //wb.Navigate(Settings.SeedsAddress[0]);
             master.Crawl();
             writeThread = new Thread(WriteToDB);
             writeThread.Start();
@@ -932,6 +852,7 @@
 
         private void Main_Load(object sender, EventArgs e)
         {
+            //Control.CheckForIllegalCrossThreadCalls = false;
             dgvTaskCapture.Rows.Clear();
             try
             {
@@ -1007,5 +928,184 @@
             //this.webBrowser.Document.Body.InnerHtml = model.kContent;
         }
         #endregion
+        #region 第二个版本，动态翻页
+        private static void Master_DynamicGoNextPageEvent(DynamicGoNextPageEventArgs args)
+        {
+            switch (configModel.kNextPagePatternType)
+            {
+                case "Dom元素":
+                case "Dom元素属性":
+                    //while ((Int32)args.ObjInt32PageIndex==1)
+                    //{
+                    //webBrowser = args.WorkBrowser;
+                    //args.WorkBrowser = webBrowser;
+                    CustomParseLink_DynamicGoNextPage(args, configModel.kNextPagePattern);//第二种类型 下一页      
+                    //}                    
+                    break;
+                default:
+                    break;
+            }
+        }
+        private delegate void InvokeCallbackEventHandler(DynamicGoNextPageEventArgs args, string kNextPagePattern);
+        private static void CustomParseLink_DynamicGoNextPage(DynamicGoNextPageEventArgs args, string kNextPagePattern)
+        {
+            if (webBrowser.InvokeRequired)
+            {
+                InvokeCallbackEventHandler InvokeCallbackEvent = new InvokeCallbackEventHandler(CustomParseLink_DynamicGoNextPage);
+                webBrowser.BeginInvoke(InvokeCallbackEvent, new object[] { args, kNextPagePattern });
+                //InvokeCallbackEventHandler InvokeCallbackEvent = new InvokeCallbackEventHandler(CustomParseLink_DynamicGoNextPage);
+
+                //args.WorkBrowser.BeginInvoke(InvokeCallbackEvent, new object[] { args, kNextPagePattern });                
+            }
+            else
+            {
+                InvokeCallback(args, kNextPagePattern);
+            }
+
+            /*  
+            if (args.WorkBrowser.InvokeRequired)
+            {
+                InvokeCallbackEventHandler InvokeCallbackEvent = new InvokeCallbackEventHandler(CustomParseLink_DynamicGoNextPage);
+                args.WorkBrowser.BeginInvoke(InvokeCallbackEvent, new object[] { args, kNextPagePattern });
+                //InvokeCallbackEventHandler InvokeCallbackEvent = new InvokeCallbackEventHandler(CustomParseLink_DynamicGoNextPage);
+
+                //args.WorkBrowser.BeginInvoke(InvokeCallbackEvent, new object[] { args, kNextPagePattern });                
+            }
+            else
+            {
+                InvokeCallback(args, kNextPagePattern);
+            }
+        */
+        }
+        /// <summary>
+        /// 这个方法的代码今天走不进来了。
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="kNextPagePattern"></param>
+        private static void InvokeCallback(DynamicGoNextPageEventArgs args, string kNextPagePattern)
+        {
+            bool isClick = false;
+            string flag = kNextPagePattern;
+            //WebBrowser kweb = args.WorkBrowser;
+            if ((Int32)args.ObjInt32PageIndex == 1)
+            {
+                //  kweb.Navigate(args.UrlInfo.UrlString);//初始化一次
+                webBrowser.Navigate(args.UrlInfo.UrlString);
+                Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+                //while (!(kweb.ReadyState == WebBrowserReadyState.Interactive || kweb.ReadyState == WebBrowserReadyState.Complete))
+                //{
+
+                //    Console.WriteLine(kweb.ReadyState);
+                //    Console.WriteLine("忙："+kweb.);
+                //    //Console.WriteLine(kweb.);
+                //    continue;
+                //}                      
+                args.ObjInt32PageIndex = 2;
+            }
+            // kweb.DocumentCompleted += Kweb_DocumentCompleted;
+            int i = 0;
+            /*
+            while (!(webBrowser.ReadyState == WebBrowserReadyState.Interactive || webBrowser.ReadyState == WebBrowserReadyState.Complete))
+            {
+                continue;
+            }
+            i++;
+            Console.WriteLine(i);
+            if (isClick)
+            {
+                //CustomParseLink_MainListMode2(new CustomParseLinkEvent3Args { Html = webBrowser.Document.Body.InnerHtml, UrlDictionary = args.UrlDictionary, UrlInfo = args.UrlInfo }, configModel.kDetailPattern, 0);
+                args.Html = webBrowser.Document.Body.InnerHtml;
+                args.ObjBoolIsDomComplated = true;
+                Console.WriteLine("DOM完成 " + i + "true");
+                isClick = false;
+            }
+            else
+            {
+                ToClickNextPage(flag, webBrowser);
+                args.ObjBoolIsDomComplated = false;
+                Console.WriteLine("DOM完成 " + i + "false");
+                isClick = true;
+            }
+            */
+            
+            webBrowser.DocumentCompleted += (a, b) =>
+            {
+                i++;
+                Console.WriteLine(i);
+                if (isClick)
+                {
+                    //CustomParseLink_MainListMode2(new CustomParseLinkEvent3Args { Html = webBrowser.Document.Body.InnerHtml, UrlDictionary = args.UrlDictionary, UrlInfo = args.UrlInfo }, configModel.kDetailPattern, 0);
+                    args.Html = webBrowser.Document.Body.InnerHtml;
+                    args.ObjBoolIsDomComplated = true;
+                    Console.WriteLine("DOM完成 " + i + "true");
+                    isClick = false;
+                }
+                else
+                {
+                    ToClickNextPage(flag, webBrowser);
+                    args.ObjBoolIsDomComplated = false;
+                    Console.WriteLine("DOM完成 " + i + "false");
+                    isClick = true;
+                }
+            };        
+            
+        }
+
+        private static void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void ToClickNextPage(string flag, WebBrowser wb)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(flag))//用正则表达式验证一下。
+                {
+                    if (wb.Document != null)
+                    {
+                        HtmlDocument dom = wb.Document;
+                        HtmlElement nextPage = null;
+                        foreach (HtmlElement element in dom.All) //轮循
+                        {
+                            if (element.Id == flag || element.InnerText == flag)
+                            {
+                                nextPage = element;
+                            }
+                        }
+                        if (nextPage != null)
+                        {
+                            nextPage.InvokeMember("click"); //触发
+
+                        }
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                // WaitTime(5.0);//可能有问题
+                //ToClickNextPage(flag, wb);
+            }
+
+        }
+        #endregion
+        private void btnRequest_Click(object sender, EventArgs e)
+        {
+            //webBrowser.Navigate("http://www.hzdpc.gov.cn/gcjsly/gcjsly_xmxx/");
+            //webBrowser.ScriptErrorsSuppressed = true;
+            webBrowser.Navigate("http://www.hzdpc.gov.cn/gcjsly/gcjsly_xmxx/");
+            //webBrowser.Navigate("http://www.baidu.com/");
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            //ToClickNextPage("下一页",webBrowser);
+            ToClickNextPage("下一页", webBrowser);
+            webBrowser.DocumentCompleted += (a, b) =>
+            {
+                MessageBox.Show("完成");
+            };
+        }
     }
 }

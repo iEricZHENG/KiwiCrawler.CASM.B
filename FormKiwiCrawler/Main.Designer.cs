@@ -67,12 +67,13 @@
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnRequest = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            webBrowser = new System.Windows.Forms.WebBrowser();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btnUpdateDB = new System.Windows.Forms.Button();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.webBrowser = new System.Windows.Forms.WebBrowser();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -86,8 +87,8 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -469,7 +470,8 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Controls.Add(this.btnNext);
+            this.tabPage3.Controls.Add(this.btnRequest);
             this.tabPage3.Controls.Add(this.groupBox6);
             this.tabPage3.Controls.Add(this.groupBox5);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
@@ -479,6 +481,35 @@
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "辅助面板";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnRequest
+            // 
+            this.btnRequest.Location = new System.Drawing.Point(340, 490);
+            this.btnRequest.Name = "btnRequest";
+            this.btnRequest.Size = new System.Drawing.Size(75, 23);
+            this.btnRequest.TabIndex = 3;
+            this.btnRequest.Text = "访问";
+            this.btnRequest.UseVisualStyleBackColor = true;
+            this.btnRequest.Click += new System.EventHandler(this.btnRequest_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(webBrowser);
+            this.groupBox6.Location = new System.Drawing.Point(311, 39);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(724, 428);
+            this.groupBox6.TabIndex = 2;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "浏览器窗口";
+            // 
+            // webBrowser
+            // 
+          webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+          webBrowser.Location = new System.Drawing.Point(3, 17);
+          webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+          webBrowser.Name = "webBrowser";
+          webBrowser.Size = new System.Drawing.Size(718, 408);
+          webBrowser.TabIndex = 0;
             // 
             // groupBox5
             // 
@@ -505,34 +536,15 @@
             this.timer.Interval = 2000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // groupBox6
+            // btnNext
             // 
-            this.groupBox6.Controls.Add(this.webBrowser);
-            this.groupBox6.Location = new System.Drawing.Point(311, 39);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(724, 428);
-            this.groupBox6.TabIndex = 2;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "浏览器窗口";
-            // 
-            // webBrowser
-            // 
-            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser.Location = new System.Drawing.Point(3, 17);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(718, 408);
-            this.webBrowser.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(340, 490);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "浏览器数据测试";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnNext.Location = new System.Drawing.Point(457, 490);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(75, 23);
+            this.btnNext.TabIndex = 4;
+            this.btnNext.Text = "翻页";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // Main
             // 
@@ -562,8 +574,8 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.groupBox5.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -611,8 +623,9 @@
         private System.Windows.Forms.Button btnUpdateDB;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.WebBrowser webBrowser;
-        private System.Windows.Forms.Button button1;
+        private static System.Windows.Forms.WebBrowser webBrowser;
+        private System.Windows.Forms.Button btnRequest;
+        private System.Windows.Forms.Button btnNext;
     }
 }
 

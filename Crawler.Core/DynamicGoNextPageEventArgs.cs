@@ -14,8 +14,12 @@ namespace Crawler.Core
     {
         public UrlInfo UrlInfo { get; set; }
         //public Dictionary<string, string> UrlDictionary { get; set; }                
-        public WebBrowser WorkBrowser { get; set; }
+        //public WebBrowser WorkBrowser { get; set; }
         //public WebBrowser StateBrowser { get; set; }
-        public Int32 PageIndex { get; set; }
+        //public Int32 PageIndex { get; set; }
+        public object ObjInt32PageIndex { get; set; }
+        public object ObjBoolIsDomComplated { get; set; }
+        //public Dictionary<string, string> UrlDictionary { get; set; }
+        public string Html { get; set; }
     }
 }
