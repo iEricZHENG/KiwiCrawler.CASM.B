@@ -119,12 +119,12 @@
   <ItemGroup>
     <Compile Include="Deletedrecord_kBll.cs" />
     <Compile Include="Extractionconfig_kBll.cs" />
+    <Compile Include="Extractioncontent_kBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SysManage.cs" />
     <Compile Include="Capturedata_kBll.cs" />
-    <Compile Include="Extractdata_kBll.cs" />
     <Compile Include="Urlconfigs_kBll.cs" />
   </ItemGroup>
   <ItemGroup>

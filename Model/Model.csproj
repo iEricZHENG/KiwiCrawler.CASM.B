@@ -122,12 +122,12 @@
   <ItemGroup>
     <Compile Include="Deletedrecord_k.cs" />
     <Compile Include="Extractionconfig_k.cs" />
+    <Compile Include="Extractioncontent_k.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SysNode.cs" />
     <Compile Include="Capturedata_k.cs" />
-    <Compile Include="Extractdata_k.cs" />
     <Compile Include="Urlconfigs_k.cs" />
   </ItemGroup>
   <ItemGroup>

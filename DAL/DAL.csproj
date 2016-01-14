@@ -141,12 +141,12 @@
   <ItemGroup>
     <Compile Include="Deletedrecord_kDal.cs" />
     <Compile Include="Extractionconfig_kDal.cs" />
+    <Compile Include="Extractioncontent_kDal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SysManage.cs" />
     <Compile Include="Capturedata_kDal.cs" />
-    <Compile Include="Extractdata_kDal.cs" />
     <Compile Include="Urlconfigs_kDal.cs" />
   </ItemGroup>
   <ItemGroup>

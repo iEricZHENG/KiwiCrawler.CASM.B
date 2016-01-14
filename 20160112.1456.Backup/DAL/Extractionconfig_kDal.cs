@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -24,28 +23,26 @@ namespace KiwiCrawler.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into extractionconfig_k(");
-			strSql.Append("kId,kUrl,kTitle,kPublishDateTime,kContent,kExtracionType,kAddressBusinessType,kKeywords,kPercent)");
+			strSql.Append("KId,KUrl,KTitle,KPublishDateTime,KContent,KAddressBusinessType,KKeyword,KPercent)");
 			strSql.Append(" values (");
-			strSql.Append("@kId,@kUrl,@kTitle,@kPublishDateTime,@kContent,@kExtracionType,@kAddressBusinessType,@kKeywords,@kPercent)");
+			strSql.Append("@KId,@KUrl,@KTitle,@KPublishDateTime,@KContent,@KAddressBusinessType,@KKeyword,@KPercent)");
 			MySqlParameter[] parameters = {
-					new MySqlParameter("@kId", MySqlDbType.Int32,11),
-					new MySqlParameter("@kUrl", MySqlDbType.Text),
-					new MySqlParameter("@kTitle", MySqlDbType.Text),
-					new MySqlParameter("@kPublishDateTime", MySqlDbType.Text),
-					new MySqlParameter("@kContent", MySqlDbType.Text),
-					new MySqlParameter("@kExtracionType", MySqlDbType.Text),
-					new MySqlParameter("@kAddressBusinessType", MySqlDbType.Text),
-					new MySqlParameter("@kKeywords", MySqlDbType.Text),
-					new MySqlParameter("@kPercent", MySqlDbType.Float)};
-			parameters[0].Value = model.kId;
-			parameters[1].Value = model.kUrl;
-			parameters[2].Value = model.kTitle;
-			parameters[3].Value = model.kPublishDateTime;
-			parameters[4].Value = model.kContent;
-			parameters[5].Value = model.kExtracionType;
-			parameters[6].Value = model.kAddressBusinessType;
-			parameters[7].Value = model.kKeywords;
-			parameters[8].Value = model.kPercent;
+					new MySqlParameter("@KId", MySqlDbType.Int32,11),
+					new MySqlParameter("@KUrl", MySqlDbType.Text),
+					new MySqlParameter("@KTitle", MySqlDbType.Text),
+					new MySqlParameter("@KPublishDateTime", MySqlDbType.DateTime),
+					new MySqlParameter("@KContent", MySqlDbType.Text),
+					new MySqlParameter("@KAddressBusinessType", MySqlDbType.Text),
+					new MySqlParameter("@KKeyword", MySqlDbType.Text),
+					new MySqlParameter("@KPercent", MySqlDbType.Float)};
+			parameters[0].Value = model.KId;
+			parameters[1].Value = model.KUrl;
+			parameters[2].Value = model.KTitle;
+			parameters[3].Value = model.KPublishDateTime;
+			parameters[4].Value = model.KContent;
+			parameters[5].Value = model.KAddressBusinessType;
+			parameters[6].Value = model.KKeyword;
+			parameters[7].Value = model.KPercent;
 
 			int rows=DbHelperMySQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -64,35 +61,32 @@ namespace KiwiCrawler.DAL
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("update extractionconfig_k set ");
-			strSql.Append("kId=@kId,");
-			strSql.Append("kUrl=@kUrl,");
-			strSql.Append("kTitle=@kTitle,");
-			strSql.Append("kPublishDateTime=@kPublishDateTime,");
-			strSql.Append("kContent=@kContent,");
-			strSql.Append("kExtracionType=@kExtracionType,");
-			strSql.Append("kAddressBusinessType=@kAddressBusinessType,");
-			strSql.Append("kKeywords=@kKeywords,");
-			strSql.Append("kPercent=@kPercent");
+			strSql.Append("KId=@KId,");
+			strSql.Append("KUrl=@KUrl,");
+			strSql.Append("KTitle=@KTitle,");
+			strSql.Append("KPublishDateTime=@KPublishDateTime,");
+			strSql.Append("KContent=@KContent,");
+			strSql.Append("KAddressBusinessType=@KAddressBusinessType,");
+			strSql.Append("KKeyword=@KKeyword,");
+			strSql.Append("KPercent=@KPercent");
 			strSql.Append(" where ");
 			MySqlParameter[] parameters = {
-					new MySqlParameter("@kId", MySqlDbType.Int32,11),
-					new MySqlParameter("@kUrl", MySqlDbType.Text),
-					new MySqlParameter("@kTitle", MySqlDbType.Text),
-					new MySqlParameter("@kPublishDateTime", MySqlDbType.Text),
-					new MySqlParameter("@kContent", MySqlDbType.Text),
-					new MySqlParameter("@kExtracionType", MySqlDbType.Text),
-					new MySqlParameter("@kAddressBusinessType", MySqlDbType.Text),
-					new MySqlParameter("@kKeywords", MySqlDbType.Text),
-					new MySqlParameter("@kPercent", MySqlDbType.Float)};
-			parameters[0].Value = model.kId;
-			parameters[1].Value = model.kUrl;
-			parameters[2].Value = model.kTitle;
-			parameters[3].Value = model.kPublishDateTime;
-			parameters[4].Value = model.kContent;
-			parameters[5].Value = model.kExtracionType;
-			parameters[6].Value = model.kAddressBusinessType;
-			parameters[7].Value = model.kKeywords;
-			parameters[8].Value = model.kPercent;
+					new MySqlParameter("@KId", MySqlDbType.Int32,11),
+					new MySqlParameter("@KUrl", MySqlDbType.Text),
+					new MySqlParameter("@KTitle", MySqlDbType.Text),
+					new MySqlParameter("@KPublishDateTime", MySqlDbType.DateTime),
+					new MySqlParameter("@KContent", MySqlDbType.Text),
+					new MySqlParameter("@KAddressBusinessType", MySqlDbType.Text),
+					new MySqlParameter("@KKeyword", MySqlDbType.Text),
+					new MySqlParameter("@KPercent", MySqlDbType.Float)};
+			parameters[0].Value = model.KId;
+			parameters[1].Value = model.KUrl;
+			parameters[2].Value = model.KTitle;
+			parameters[3].Value = model.KPublishDateTime;
+			parameters[4].Value = model.KContent;
+			parameters[5].Value = model.KAddressBusinessType;
+			parameters[6].Value = model.KKeyword;
+			parameters[7].Value = model.KPercent;
 
 			int rows=DbHelperMySQL.ExecuteSql(strSql.ToString(),parameters);
 			if (rows > 0)
@@ -136,7 +130,7 @@ namespace KiwiCrawler.DAL
 		{
 			//该表无主键信息，请自定义主键/条件字段
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select kId,kUrl,kTitle,kPublishDateTime,kContent,kExtracionType,kAddressBusinessType,kKeywords,kPercent from extractionconfig_k ");
+			strSql.Append("select KId,KUrl,KTitle,KPublishDateTime,KContent,KAddressBusinessType,KKeyword,KPercent from extractionconfig_k ");
 			strSql.Append(" where ");
 			MySqlParameter[] parameters = {
 			};
@@ -162,41 +156,37 @@ namespace KiwiCrawler.DAL
 			KiwiCrawler.Model.Extractionconfig_k model=new KiwiCrawler.Model.Extractionconfig_k();
 			if (row != null)
 			{
-				if(row["kId"]!=null && row["kId"].ToString()!="")
+				if(row["KId"]!=null && row["KId"].ToString()!="")
 				{
-					model.kId=int.Parse(row["kId"].ToString());
+					model.KId=int.Parse(row["KId"].ToString());
 				}
-				if(row["kUrl"]!=null)
+				if(row["KUrl"]!=null)
 				{
-					model.kUrl=row["kUrl"].ToString();
+					model.KUrl=row["KUrl"].ToString();
 				}
-				if(row["kTitle"]!=null)
+				if(row["KTitle"]!=null)
 				{
-					model.kTitle=row["kTitle"].ToString();
+					model.KTitle=row["KTitle"].ToString();
 				}
-				if(row["kPublishDateTime"]!=null)
+				if(row["KPublishDateTime"]!=null && row["KPublishDateTime"].ToString()!="")
 				{
-					model.kPublishDateTime=row["kPublishDateTime"].ToString();
+					model.KPublishDateTime=DateTime.Parse(row["KPublishDateTime"].ToString());
 				}
-				if(row["kContent"]!=null)
+				if(row["KContent"]!=null)
 				{
-					model.kContent=row["kContent"].ToString();
+					model.KContent=row["KContent"].ToString();
 				}
-				if(row["kExtracionType"]!=null)
+				if(row["KAddressBusinessType"]!=null)
 				{
-					model.kExtracionType=row["kExtracionType"].ToString();
+					model.KAddressBusinessType=row["KAddressBusinessType"].ToString();
 				}
-				if(row["kAddressBusinessType"]!=null)
+				if(row["KKeyword"]!=null)
 				{
-					model.kAddressBusinessType=row["kAddressBusinessType"].ToString();
+					model.KKeyword=row["KKeyword"].ToString();
 				}
-				if(row["kKeywords"]!=null)
+				if(row["KPercent"]!=null && row["KPercent"].ToString()!="")
 				{
-					model.kKeywords=row["kKeywords"].ToString();
-				}
-				if(row["kPercent"]!=null && row["kPercent"].ToString()!="")
-				{
-					model.kPercent=decimal.Parse(row["kPercent"].ToString());
+					model.KPercent=decimal.Parse(row["KPercent"].ToString());
 				}
 			}
 			return model;
@@ -208,7 +198,7 @@ namespace KiwiCrawler.DAL
 		public DataSet GetList(string strWhere)
 		{
 			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select kId,kUrl,kTitle,kPublishDateTime,kContent,kExtracionType,kAddressBusinessType,kKeywords,kPercent ");
+			strSql.Append("select KId,KUrl,KTitle,KPublishDateTime,KContent,KAddressBusinessType,KKeyword,KPercent ");
 			strSql.Append(" FROM extractionconfig_k ");
 			if(strWhere.Trim()!="")
 			{

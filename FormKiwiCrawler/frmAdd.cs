@@ -41,10 +41,10 @@ namespace FormKiwiCrawler
                 KiwiCrawler.BLL.Extractionconfig_kBll extractionconfigBll = new KiwiCrawler.BLL.Extractionconfig_kBll();
                 KiwiCrawler.Model.Extractionconfig_k extractionconfigModel = new KiwiCrawler.Model.Extractionconfig_k();
                 //extractionconfigModel.KId = bll.GetMaxId()-1;//查询出来的比实际加了1
-                extractionconfigModel.KId = bll.GetModelList("kUrl='" + urlFrmMode.kUrl + "'").FirstOrDefault().kId;
-                extractionconfigModel.KUrl = urlFrmMode.kUrl;
-                extractionconfigModel.KKeyword = urlFrmMode.kKeyWords;
-                extractionconfigModel.KPercent = 0;
+                extractionconfigModel.kId = bll.GetModelList("kUrl='" + urlFrmMode.kUrl + "'").FirstOrDefault().kId;
+                extractionconfigModel.kUrl = urlFrmMode.kUrl;
+                extractionconfigModel.kKeywords = urlFrmMode.kKeyWords;
+                extractionconfigModel.kPercent = 0;
                 if (extractionconfigBll.Add(extractionconfigModel))
                 {
                     msg += "同步抽取信息成功。\r\n";

@@ -216,24 +216,29 @@ namespace KiwiCrawler.Core
         {
             var currentThreadIndex = (int)threadIndex;
             //nextPageBrowser.Navigate(Settings.SeedsAddress[0]);
+            DynamicGoNextPageEventArgs goNextArgs = new DynamicGoNextPageEventArgs();
+            goNextArgs.ObjInt32PageIndex = objInt32PageIndex;
             while (true)
             {
                 if (UrlQueue.Instance.Count == 0)
                 {
-
-                    DynamicGoNextPageEventArgs goNextArgs = new DynamicGoNextPageEventArgs {
-                        UrlInfo = new UrlInfo(Settings.SeedsAddress[0]),
-                        //WorkBrowser = nextPageBrowser,
-                        ObjInt32PageIndex = objInt32PageIndex,
-                        ObjBoolIsDomComplated = objBoolIsDomComplated,//这个没有按照预期run
-                        //UrlDictionary = urlDictionary//点击得到的队列
-                        Html = ""
-                    };
-                    DynamicGoNextPageEvent(goNextArgs);//这个事件执行完，UrlQueue.Instance里应该有数据了
-                    //if ((Int32)objInt32PageIndex==1)
+                    //DynamicGoNextPageEventArgs goNextArgs = new DynamicGoNextPageEventArgs
                     //{
-                    //    continue;
-                    //}
+                    //    UrlInfo = new UrlInfo(Settings.SeedsAddress[0]),
+                    //    //WorkBrowser = nextPageBrowser,
+                    //    ObjInt32PageIndex = objInt32PageIndex,
+                    //    ObjBoolIsDomComplated = objBoolIsDomComplated,//这个没有按照预期run
+                    //                                                  //UrlDictionary = urlDictionary//点击得到的队列
+                    //    Html = ""
+                    //};
+                    if ((Int32)goNextArgs.ObjInt32PageIndex == 1)
+                    {
+                        goNextArgs.UrlInfo = new UrlInfo(Settings.SeedsAddress[0]);
+                        //                        goNextArgs.ObjInt32PageIndex = objInt32PageIndex;
+                        goNextArgs.ObjBoolIsDomComplated = objBoolIsDomComplated;
+                        goNextArgs.Html = "";
+                        DynamicGoNextPageEvent(goNextArgs);//这个事件执行完，UrlQueue.Instance里应该有数据了
+                    }
                     int time = 0;
                     while ((!(bool)goNextArgs.ObjBoolIsDomComplated))
                     {
@@ -248,28 +253,55 @@ namespace KiwiCrawler.Core
                     //this.ParseLinks(new UrlInfo(Settings.SeedsAddress[0]), nextPageBrowser.Document.Body.InnerHtml);//根据页面html和urlInfo，开启将链接添
                     //UrlDirectoryToURLQueue(new UrlInfo(Settings.SeedsAddress[0]) { }, urlDictionary);
 
-                    if (!String.IsNullOrEmpty(goNextArgs.Html))
+                    //if (!String.IsNullOrEmpty(goNextArgs.Html))
+                    //{
+                    //    //this.ParseLinks(goNextArgs.UrlInfo, goNextArgs.Html);//根据页面html和urlInfo，开启将链接添加到url爬行队列                            
+                    //    ContentQueue_Kiwi.Instance.EnQueue(goNextArgs.Html);
+                    //}
+                    /* 多线程测试失败
+                    //ReadHtmlThreadClass_kiwi myReadHtmlParse = new ReadHtmlThreadClass_kiwi(ReadContentToParse);                    
+                    Thread readHtmlThread = new Thread(myReadHtmlParse.ReadToParse);
+                    myReadHtmlParse.GoNextArgs = goNextArgs;
+                    myReadHtmlParse.ReadHtmlThread = readHtmlThread;
+                    readHtmlThread.Start();
+                    */
+
+                    if (ContentQueue_Kiwi.Instance.Count > 0)
                     {
-                        this.ParseLinks(goNextArgs.UrlInfo, goNextArgs.Html);//根据页面html和urlInfo，开启将链接添加到url爬行队列                                       
-                    }                    
-                    //continue;
+                        string html = ContentQueue_Kiwi.Instance.DeQueue();
+                        if (!string.IsNullOrEmpty(html))
+                        {
+                            this.ParseLinks(goNextArgs.UrlInfo, html);//根据页面html和urlInfo，开启将链接添加到url爬行队列                            
+                        }
+                    }
+                    else
+                    {
+                        if ((Int32)goNextArgs.ObjInt32PageIndex < Settings.Depth)
+                        {
+                            Thread.Sleep(2000);//睡眠
+                            continue;
+                        }
+                    }
                 }
                 #region 运行状态控制
-                // 根据队列中的 Url 数量和空闲线程的数量，判断线程是睡眠还是退出
+                // 根据队列中的 Url 数量和空闲线程的数量，判断线程是睡眠还是退出                
                 if (UrlQueue.Instance.Count == 0)
                 {
-                    #region 退出
-                    this.ThreadStatus[currentThreadIndex] = true;
-                    if (!this.ThreadStatus.Any(t => t == false))//退出，都是true结束
+                    if ((Int32)goNextArgs.ObjInt32PageIndex >= Settings.Depth)
                     {
-                        break;
+                        #region 退出
+                        this.ThreadStatus[currentThreadIndex] = true;
+                        if (!this.ThreadStatus.Any(t => t == false))//退出，都是true结束
+                        {
+                            break;
+                        }
+                        #endregion
+                        #region 睡一下，下一轮继续
+                        Thread.Sleep(2000);//睡眠
+                        continue;
+                        #endregion
                     }
-                    #endregion
-                    #region 睡一下，下一轮继续
-                    Thread.Sleep(2000);//睡眠
-                    continue;
-                    #endregion
-                } 
+                }
                 #endregion
 
                 this.ThreadStatus[currentThreadIndex] = false;
@@ -406,24 +438,59 @@ namespace KiwiCrawler.Core
                     {
                         response.Close();
                     }
-                } 
+                }
                 #endregion
             }
         }
-        /* B类型Cookie
-        private void ConfigCookie(UrlInfo urlInfo)
+
+        private void ReadContentToParse(DynamicGoNextPageEventArgs goNextArgs, Thread readHtmlThread)
         {
-            Uri uri = new Uri(urlInfo.UrlString);
-            CookieCollection cookies = this.cookieContainer.GetCookies(uri);
-            StringBuilder sb = new StringBuilder("");
-            foreach (var item in cookies)
+            while (true)
             {
-                sb.Append(item);
-                sb.Append(";");
+                if (ContentQueue_Kiwi.Instance.Count > 0)
+                {
+                    string html = ContentQueue_Kiwi.Instance.DeQueue();
+                    if (!string.IsNullOrEmpty(html))
+                    {
+                        this.ParseLinks(goNextArgs.UrlInfo, html);//根据页面html和urlInfo，开启将链接添加到url爬行队列                            
+                    }
+                }
+                else
+                {
+                    if ((Int32)objInt32PageIndex > Settings.Depth)
+                    {
+                        try
+                        {
+                            readHtmlThread.Abort();
+                            readHtmlThread.DisableComObjectEagerCleanup();
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
+                        break;
+
+
+                    }
+                    continue;
+                }
             }
-            this.detailBrowser.Document.Cookie = sb.ToString();
         }
-        */
+
+        /* B类型Cookie
+private void ConfigCookie(UrlInfo urlInfo)
+{
+   Uri uri = new Uri(urlInfo.UrlString);
+   CookieCollection cookies = this.cookieContainer.GetCookies(uri);
+   StringBuilder sb = new StringBuilder("");
+   foreach (var item in cookies)
+   {
+       sb.Append(item);
+       sb.Append(";");
+   }
+   this.detailBrowser.Document.Cookie = sb.ToString();
+}
+*/
         /// <summary>
         /// The parse links.
         /// 超链接解析
@@ -459,7 +526,7 @@ namespace KiwiCrawler.Core
                 urlDictionary2[urlKey] = urlValue;
                 match = match.NextMatch();//从上一个匹配结束的位置（即在上一个匹配字符之后的字符）开始返回一个包含下一个匹配结果的新
             }
-            */ 
+            */
             #endregion
             //至此会得到一个urlDictionary[urlKey] = urlValue;
             //Kiwi:在这里添加自定义处理也不错，url+html==>url
