@@ -14,7 +14,7 @@ namespace FormKiwiCrawler
         public KiwiCrawler.Model.Urlconfigs_k urlFrmMode_k { get; set; }//这个属性好像没用到，记不得了20151208
         public frmAdd()
         {
-            InitializeComponent();
+            InitializeComponent();      
         }
         private void btnFinish_Click(object sender, EventArgs e)
         {
@@ -62,6 +62,16 @@ namespace FormKiwiCrawler
             MessageBox.Show(msg);
             urlFrmMode_k = urlFrmMode;
             this.Close();
+        }
+
+        private void frmAdd_Load(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void cbCaptureType_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

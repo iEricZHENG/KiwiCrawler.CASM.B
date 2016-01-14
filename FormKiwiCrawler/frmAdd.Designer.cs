@@ -81,6 +81,7 @@
             this.cbCaptureType.Size = new System.Drawing.Size(114, 20);
             this.cbCaptureType.TabIndex = 4;
             this.cbCaptureType.Text = "DomMode";
+            this.cbCaptureType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbCaptureType_KeyPress);
             // 
             // label1
             // 
@@ -129,7 +130,6 @@
             // cbDetailPatternType
             // 
             this.cbDetailPatternType.Cursor = System.Windows.Forms.Cursors.Default;
-            this.cbDetailPatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDetailPatternType.FormattingEnabled = true;
             this.cbDetailPatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -140,6 +140,8 @@
             this.cbDetailPatternType.Name = "cbDetailPatternType";
             this.cbDetailPatternType.Size = new System.Drawing.Size(114, 20);
             this.cbDetailPatternType.TabIndex = 12;
+            this.cbDetailPatternType.Text = "正则表达式";
+            this.cbDetailPatternType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbCaptureType_KeyPress);
             // 
             // groupBox1
             // 
@@ -196,7 +198,6 @@
             // cbNextPagePatternType
             // 
             this.cbNextPagePatternType.Cursor = System.Windows.Forms.Cursors.Default;
-            this.cbNextPagePatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNextPagePatternType.FormattingEnabled = true;
             this.cbNextPagePatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -207,6 +208,8 @@
             this.cbNextPagePatternType.Name = "cbNextPagePatternType";
             this.cbNextPagePatternType.Size = new System.Drawing.Size(114, 20);
             this.cbNextPagePatternType.TabIndex = 12;
+            this.cbNextPagePatternType.Text = "正则表达式";
+            this.cbNextPagePatternType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbCaptureType_KeyPress);
             // 
             // label7
             // 
@@ -282,6 +285,7 @@
             this.Name = "frmAdd";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "添加URL";
+            this.Load += new System.EventHandler(this.frmAdd_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

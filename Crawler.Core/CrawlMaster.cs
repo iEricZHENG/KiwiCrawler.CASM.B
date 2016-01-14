@@ -252,7 +252,6 @@ namespace KiwiCrawler.Core
                     }
                     //this.ParseLinks(new UrlInfo(Settings.SeedsAddress[0]), nextPageBrowser.Document.Body.InnerHtml);//根据页面html和urlInfo，开启将链接添
                     //UrlDirectoryToURLQueue(new UrlInfo(Settings.SeedsAddress[0]) { }, urlDictionary);
-
                     //if (!String.IsNullOrEmpty(goNextArgs.Html))
                     //{
                     //    //this.ParseLinks(goNextArgs.UrlInfo, goNextArgs.Html);//根据页面html和urlInfo，开启将链接添加到url爬行队列                            
@@ -442,53 +441,18 @@ namespace KiwiCrawler.Core
                 #endregion
             }
         }
-
-        private void ReadContentToParse(DynamicGoNextPageEventArgs goNextArgs, Thread readHtmlThread)
-        {
-            while (true)
-            {
-                if (ContentQueue_Kiwi.Instance.Count > 0)
-                {
-                    string html = ContentQueue_Kiwi.Instance.DeQueue();
-                    if (!string.IsNullOrEmpty(html))
-                    {
-                        this.ParseLinks(goNextArgs.UrlInfo, html);//根据页面html和urlInfo，开启将链接添加到url爬行队列                            
-                    }
-                }
-                else
-                {
-                    if ((Int32)objInt32PageIndex > Settings.Depth)
-                    {
-                        try
-                        {
-                            readHtmlThread.Abort();
-                            readHtmlThread.DisableComObjectEagerCleanup();
-                        }
-                        catch (Exception)
-                        {
-                            throw;
-                        }
-                        break;
-
-
-                    }
-                    continue;
-                }
-            }
-        }
-
         /* B类型Cookie
 private void ConfigCookie(UrlInfo urlInfo)
 {
-   Uri uri = new Uri(urlInfo.UrlString);
-   CookieCollection cookies = this.cookieContainer.GetCookies(uri);
-   StringBuilder sb = new StringBuilder("");
-   foreach (var item in cookies)
-   {
-       sb.Append(item);
-       sb.Append(";");
-   }
-   this.detailBrowser.Document.Cookie = sb.ToString();
+Uri uri = new Uri(urlInfo.UrlString);
+CookieCollection cookies = this.cookieContainer.GetCookies(uri);
+StringBuilder sb = new StringBuilder("");
+foreach (var item in cookies)
+{
+sb.Append(item);
+sb.Append(";");
+}
+this.detailBrowser.Document.Cookie = sb.ToString();
 }
 */
         /// <summary>
@@ -510,8 +474,7 @@ private void ConfigCookie(UrlInfo urlInfo)
             {
                 return;
             }
-            var urlDictionary2 = new Dictionary<String, String>();
-            //urlDictionary2 = urlDictionary;
+            var urlDictionary2 = new Dictionary<String, String>();       
             #region 丢弃
             /*
             Match match = Regex.Match(html, "(?i)<a .*?href=\"([^\"]+)\"[^>]*>(.*?)</a>");//原来的正则表达式"(?i)<a .*?href=\"([^\"]+)\"[^>]*>(.*?)</a>"超链接正则表达式

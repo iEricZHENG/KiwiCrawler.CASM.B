@@ -129,7 +129,6 @@
             // cbNextPagePatternType
             // 
             this.cbNextPagePatternType.Cursor = System.Windows.Forms.Cursors.Default;
-            this.cbNextPagePatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbNextPagePatternType.FormattingEnabled = true;
             this.cbNextPagePatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -140,6 +139,8 @@
             this.cbNextPagePatternType.Name = "cbNextPagePatternType";
             this.cbNextPagePatternType.Size = new System.Drawing.Size(114, 20);
             this.cbNextPagePatternType.TabIndex = 12;
+            this.cbNextPagePatternType.Text = "正则表达式";
+            this.cbNextPagePatternType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbDetailPatternType_KeyPress);
             // 
             // txtBusinessType
             // 
@@ -190,7 +191,6 @@
             // cbDetailPatternType
             // 
             this.cbDetailPatternType.Cursor = System.Windows.Forms.Cursors.Default;
-            this.cbDetailPatternType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbDetailPatternType.FormattingEnabled = true;
             this.cbDetailPatternType.Items.AddRange(new object[] {
             "正则表达式",
@@ -201,6 +201,8 @@
             this.cbDetailPatternType.Name = "cbDetailPatternType";
             this.cbDetailPatternType.Size = new System.Drawing.Size(114, 20);
             this.cbDetailPatternType.TabIndex = 12;
+            this.cbDetailPatternType.Text = "正则表达式";
+            this.cbDetailPatternType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbDetailPatternType_KeyPress);
             // 
             // groupBox1
             // 
@@ -246,6 +248,7 @@
             this.cbCaptureType.Size = new System.Drawing.Size(114, 20);
             this.cbCaptureType.TabIndex = 25;
             this.cbCaptureType.Text = "DomMode";
+            this.cbCaptureType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbDetailPatternType_KeyPress);
             // 
             // txtPageNum
             // 

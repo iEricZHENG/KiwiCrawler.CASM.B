@@ -67,13 +67,14 @@
             this.radioSpeedYes = new System.Windows.Forms.RadioButton();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnNext = new System.Windows.Forms.Button();
             this.btnRequest = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             webBrowser = new System.Windows.Forms.WebBrowser();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btnUpdateDB = new System.Windows.Forms.Button();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.btnNext = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -470,6 +471,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.comboBox1);
             this.tabPage3.Controls.Add(this.btnNext);
             this.tabPage3.Controls.Add(this.btnRequest);
             this.tabPage3.Controls.Add(this.groupBox6);
@@ -481,6 +483,16 @@
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "辅助面板";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnNext
+            // 
+            this.btnNext.Location = new System.Drawing.Point(457, 490);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(75, 23);
+            this.btnNext.TabIndex = 4;
+            this.btnNext.Text = "翻页";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // btnRequest
             // 
@@ -504,12 +516,12 @@
             // 
             // webBrowser
             // 
-          webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-          webBrowser.Location = new System.Drawing.Point(3, 17);
-          webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-          webBrowser.Name = "webBrowser";
-          webBrowser.Size = new System.Drawing.Size(718, 408);
-          webBrowser.TabIndex = 0;
+            webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            webBrowser.Location = new System.Drawing.Point(3, 17);
+            webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            webBrowser.Name = "webBrowser";
+            webBrowser.Size = new System.Drawing.Size(718, 408);
+            webBrowser.TabIndex = 0;
             // 
             // groupBox5
             // 
@@ -536,15 +548,19 @@
             this.timer.Interval = 2000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // btnNext
+            // comboBox1
             // 
-            this.btnNext.Location = new System.Drawing.Point(457, 490);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Size = new System.Drawing.Size(75, 23);
-            this.btnNext.TabIndex = 4;
-            this.btnNext.Text = "翻页";
-            this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3"});
+            this.comboBox1.Location = new System.Drawing.Point(45, 326);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 20);
+            this.comboBox1.TabIndex = 5;
+            this.comboBox1.Text = "1";
+            this.comboBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox1_KeyPress);
             // 
             // Main
             // 
@@ -623,9 +639,10 @@
         private System.Windows.Forms.Button btnUpdateDB;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
-        private static System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.Button btnRequest;
         private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private static System.Windows.Forms.WebBrowser webBrowser;
     }
 }
 

@@ -29,7 +29,7 @@ namespace FormKiwiCrawler
             this.txtDetailPattern.Text = editFrmModel.kDetailPattern.Trim();
             this.txtKeyWords.Text = editFrmModel.kKeyWords.Trim();
             this.txtNextPagePattern.Text = editFrmModel.kNextPagePattern;
-            this.txtPageNum.Text = editFrmModel.kPageTotal==null?"":editFrmModel.kPageTotal.ToString();
+            this.txtPageNum.Text = editFrmModel.kPageTotal == null ? "" : editFrmModel.kPageTotal.ToString();
             this.txtUrl.Text = editFrmModel.kUrl.Trim();
             this.txtComplateDegree.Text = editFrmModel.kComplateDegree == null ? "0" : Convert.ToDecimal(editFrmModel.kComplateDegree).ToString("p2");
             // model.kComplateDegree == null ? "" : Convert.ToDecimal(model.kComplateDegree).ToString("p2");
@@ -37,6 +37,20 @@ namespace FormKiwiCrawler
             this.cbCaptureType.Text = editFrmModel.kCaptureType.Trim();
             this.cbDetailPatternType.Text = editFrmModel.kDetailPatternType.Trim();
             this.cbNextPagePatternType.Text = editFrmModel.kNextPagePatternType.Trim();
+            //下拉列表设置
+            for (int i = 0; i < this.Controls.Count; i++)
+            {
+                ComboBox cb = Controls[i] as ComboBox;
+                if (cb != null)
+                {
+                    cb.DropDownStyle = ComboBoxStyle.DropDown;
+                    cb.SelectedItem = 0;
+                    cb.KeyPress += (objSender, pressEventArgs) =>
+                    {
+                        pressEventArgs.Handled = true;
+                    };
+                }
+            }
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
@@ -47,7 +61,7 @@ namespace FormKiwiCrawler
             editFrmModel.kNextPagePattern = this.txtNextPagePattern.Text;
             editFrmModel.kPageTotal = String.IsNullOrEmpty(this.txtPageNum.Text.Trim()) ? null : (int?)Convert.ToInt32(this.txtPageNum.Text.Trim());
             editFrmModel.kUrl = this.txtUrl.Text.Trim();
-            editFrmModel.kComplateDegree = string.IsNullOrEmpty(this.txtComplateDegree.Text.Trim()) ? 0 : Convert.ToDecimal(this.txtComplateDegree.Text.Trim().ToString().TrimEnd('%'))/100;            
+            editFrmModel.kComplateDegree = string.IsNullOrEmpty(this.txtComplateDegree.Text.Trim()) ? 0 : Convert.ToDecimal(this.txtComplateDegree.Text.Trim().ToString().TrimEnd('%')) / 100;
 
             editFrmModel.kCaptureType = this.cbCaptureType.Text;
             editFrmModel.kDetailPatternType = this.cbDetailPatternType.Text;
@@ -66,6 +80,9 @@ namespace FormKiwiCrawler
 
         }
 
-
+        private void cbDetailPatternType_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

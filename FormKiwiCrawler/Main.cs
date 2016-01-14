@@ -41,7 +41,9 @@
 
         public Main()
         {
+
             InitializeComponent();
+
             tabPage4.Controls.Add(kiwiConsole);
             kiwiConsole.Dock = DockStyle.Fill;
             kiwiConsole.Show();
@@ -599,24 +601,6 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
                 {
                     DataGridViewRow row = new DataGridViewRow();
                     row.CreateCells(dgv);
-                    #region 添加CheckCell
-
-                    //添加CheckCell
-                    //DataGridViewCheckBoxCell checkCell = new DataGridViewCheckBoxCell();
-                    //row.Cells[0] = checkCell;
-                    //row.Cells[1].Value = model.kId;
-                    //row.Cells[2].Value = model.kUrl;
-                    //row.Cells[3].Value = model.kPageTotal;
-                    //row.Cells[4].Value = model.kCaptureType;
-                    //row.Cells[5].Value = model.kDetailPattern;
-                    //row.Cells[6].Value = model.kDetailPatternType;
-                    //row.Cells[7].Value = model.kNextPagePattern;
-                    //row.Cells[8].Value = model.kNextPagePatternType;
-                    //row.Cells[9].Value = model.kComplateDegree;
-                    //row.Cells[10].Value = model.kAddressBusinessType;
-                    //row.Cells[11].Value = model.kKeyWords;
-                    //row.Cells[12].Value = "抓取"; 
-                    #endregion
                     row.Cells[0].Value = model.kId;
                     row.Cells[1].Value = model.kUrl;
                     row.Cells[2].Value = model.kPageTotal;
@@ -625,7 +609,6 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
                     row.Cells[5].Value = model.kDetailPatternType;
                     row.Cells[6].Value = model.kNextPagePattern;
                     row.Cells[7].Value = model.kNextPagePatternType;
-                    //row.Cells[8].Value = model.kComplateDegree;
                     row.Cells[8].Value = model.kComplateDegree == null ? "" : Convert.ToDecimal(model.kComplateDegree).ToString("p2");
                     row.Cells[9].Value = model.kAddressBusinessType;
                     row.Cells[10].Value = model.kKeyWords;
@@ -894,13 +877,7 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
             }
             MessageBox.Show("操作完成");
         }
-        #endregion
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Capturedata_kBll bll = new Capturedata_kBll();
-            Capturedata_k model = bll.GetModelList("").FirstOrDefault();         
-        }
+        #endregion    
         #endregion
         #region 第二个版本，动态翻页
         private static void Master_DynamicGoNextPageEvent(DynamicGoNextPageEventArgs args)
@@ -908,7 +885,7 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
             switch (configModel.kNextPagePatternType)
             {
                 case "Dom元素":
-                case "Dom元素属性":              
+                case "Dom元素属性":
                     CustomParseLink_DynamicGoNextPage(args, configModel.kNextPagePattern);//第二种类型 下一页                          
                     break;
                 default:
@@ -921,12 +898,12 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
             if (webBrowser.InvokeRequired)
             {
                 InvokeCallbackEventHandler InvokeCallbackEvent = new InvokeCallbackEventHandler(CustomParseLink_DynamicGoNextPage);
-                webBrowser.BeginInvoke(InvokeCallbackEvent, new object[] { args, kNextPagePattern });                         
+                webBrowser.BeginInvoke(InvokeCallbackEvent, new object[] { args, kNextPagePattern });
             }
             else
             {
                 InvokeCallback(args, kNextPagePattern);
-            }    
+            }
         }
         /// <summary>
         /// 这个方法的代码今天走不进来了。
@@ -934,22 +911,22 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
         /// <param name="args"></param>
         /// <param name="kNextPagePattern"></param>
         private static void InvokeCallback(DynamicGoNextPageEventArgs args, string kNextPagePattern)
-        {            
-            string flag = kNextPagePattern;            
+        {
+            string flag = kNextPagePattern;
             if ((Int32)args.ObjInt32PageIndex == 1)
             {
                 args.ObjInt32PageIndex = 2;
                 webBrowser.Navigate(args.UrlInfo.UrlString);
                 //Console.WriteLine(Thread.CurrentThread.ManagedThreadId);                            
-            }            
+            }
             webBrowser.DocumentCompleted += (a, b) =>
             {
-                if (pageIndex >1)
+                if (pageIndex > 1)
                 {
                     args.Html = webBrowser.Document.Body.InnerHtml;
                     ContentQueue_Kiwi.Instance.EnQueue(webBrowser.Document.Body.InnerHtml);
                 }
-                pageIndex++;                                
+                pageIndex++;
                 args.ObjBoolIsDomComplated = true;
                 args.ObjInt32PageIndex = pageIndex;
                 ToClickNextPage(flag, webBrowser);
@@ -990,8 +967,8 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
         }
         #endregion
         private void btnRequest_Click(object sender, EventArgs e)
-        {        
-            webBrowser.Navigate("http://www.hzdpc.gov.cn/gcjsly/gcjsly_xmxx/");           
+        {
+            webBrowser.Navigate("http://www.hzdpc.gov.cn/gcjsly/gcjsly_xmxx/");
         }
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -1002,6 +979,11 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
             {
                 MessageBox.Show("完成");
             };
+        }
+
+        private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

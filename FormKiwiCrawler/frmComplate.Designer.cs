@@ -35,6 +35,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnCompute = new System.Windows.Forms.Button();
             this.ckbDetail = new System.Windows.Forms.CheckBox();
+            this.cbNextPageType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -50,14 +51,14 @@
             // 
             this.txtRow.Location = new System.Drawing.Point(128, 24);
             this.txtRow.Name = "txtRow";
-            this.txtRow.Size = new System.Drawing.Size(100, 21);
+            this.txtRow.Size = new System.Drawing.Size(111, 21);
             this.txtRow.TabIndex = 1;
             // 
             // txtTail
             // 
             this.txtTail.Location = new System.Drawing.Point(128, 75);
             this.txtTail.Name = "txtTail";
-            this.txtTail.Size = new System.Drawing.Size(100, 21);
+            this.txtTail.Size = new System.Drawing.Size(111, 21);
             this.txtTail.TabIndex = 5;
             // 
             // label3
@@ -71,7 +72,7 @@
             // 
             // btnCompute
             // 
-            this.btnCompute.Location = new System.Drawing.Point(153, 136);
+            this.btnCompute.Location = new System.Drawing.Point(164, 169);
             this.btnCompute.Name = "btnCompute";
             this.btnCompute.Size = new System.Drawing.Size(75, 23);
             this.btnCompute.TabIndex = 6;
@@ -82,18 +83,32 @@
             // ckbDetail
             // 
             this.ckbDetail.AutoSize = true;
-            this.ckbDetail.Location = new System.Drawing.Point(33, 140);
+            this.ckbDetail.Location = new System.Drawing.Point(33, 137);
             this.ckbDetail.Name = "ckbDetail";
             this.ckbDetail.Size = new System.Drawing.Size(84, 16);
             this.ckbDetail.TabIndex = 7;
             this.ckbDetail.Text = "没有详细页";
             this.ckbDetail.UseVisualStyleBackColor = true;
             // 
+            // cbNextPageType
+            // 
+            this.cbNextPageType.FormattingEnabled = true;
+            this.cbNextPageType.Items.AddRange(new object[] {
+            "第一种翻页类型",
+            "第二种翻页类型"});
+            this.cbNextPageType.Location = new System.Drawing.Point(33, 172);
+            this.cbNextPageType.Name = "cbNextPageType";
+            this.cbNextPageType.Size = new System.Drawing.Size(114, 20);
+            this.cbNextPageType.TabIndex = 8;
+            this.cbNextPageType.Text = "第一种翻页类型";
+            this.cbNextPageType.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbNextPageType_KeyPress);
+            // 
             // frmComplate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(260, 188);
+            this.ClientSize = new System.Drawing.Size(265, 213);
+            this.Controls.Add(this.cbNextPageType);
             this.Controls.Add(this.ckbDetail);
             this.Controls.Add(this.btnCompute);
             this.Controls.Add(this.txtTail);
@@ -104,6 +119,7 @@
             this.Name = "frmComplate";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "frmComplate";
+            this.Load += new System.EventHandler(this.frmComplate_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -117,5 +133,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnCompute;
         private System.Windows.Forms.CheckBox ckbDetail;
+        private System.Windows.Forms.ComboBox cbNextPageType;
     }
 }
