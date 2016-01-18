@@ -7,19 +7,19 @@ using KiwiCrawler.Model;
 namespace KiwiCrawler.BLL
 {
 	/// <summary>
-	/// Extractionconfig_kBll
+	/// Extractioncontent_kBll
 	/// </summary>
-	public partial class Extractionconfig_kBll
+	public partial class Extractioncontent_kBll
 	{
-		private readonly KiwiCrawler.DAL.Extractionconfig_kDal dal=new KiwiCrawler.DAL.Extractionconfig_kDal();
-		public Extractionconfig_kBll()
+		private readonly KiwiCrawler.DAL.Extractioncontent_kDal dal=new KiwiCrawler.DAL.Extractioncontent_kDal();
+		public Extractioncontent_kBll()
 		{}
 		#region  BasicMethod
 
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
-		public bool Add(KiwiCrawler.Model.Extractionconfig_k model)
+		public bool Add(KiwiCrawler.Model.Extractioncontent_k model)
 		{
 			return dal.Add(model);
 		}
@@ -27,7 +27,7 @@ namespace KiwiCrawler.BLL
 		/// <summary>
 		/// 更新一条数据
 		/// </summary>
-		public bool Update(KiwiCrawler.Model.Extractionconfig_k model)
+		public bool Update(KiwiCrawler.Model.Extractioncontent_k model)
 		{
 			return dal.Update(model);
 		}
@@ -44,7 +44,7 @@ namespace KiwiCrawler.BLL
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public KiwiCrawler.Model.Extractionconfig_k GetModel()
+		public KiwiCrawler.Model.Extractioncontent_k GetModel()
 		{
 			//该表无主键信息，请自定义主键/条件字段
 			return dal.GetModel();
@@ -53,10 +53,10 @@ namespace KiwiCrawler.BLL
 		/// <summary>
 		/// 得到一个对象实体，从缓存中
 		/// </summary>
-		public KiwiCrawler.Model.Extractionconfig_k GetModelByCache()
+		public KiwiCrawler.Model.Extractioncontent_k GetModelByCache()
 		{
 			//该表无主键信息，请自定义主键/条件字段
-			string CacheKey = "Extractionconfig_kModel-" ;
+			string CacheKey = "Extractioncontent_kModel-" ;
 			object objModel = Maticsoft.Common.DataCache.GetCache(CacheKey);
 			if (objModel == null)
 			{
@@ -71,7 +71,7 @@ namespace KiwiCrawler.BLL
 				}
 				catch{}
 			}
-			return (KiwiCrawler.Model.Extractionconfig_k)objModel;
+			return (KiwiCrawler.Model.Extractioncontent_k)objModel;
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace KiwiCrawler.BLL
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>
-		public List<KiwiCrawler.Model.Extractionconfig_k> GetModelList(string strWhere)
+		public List<KiwiCrawler.Model.Extractioncontent_k> GetModelList(string strWhere)
 		{
 			DataSet ds = dal.GetList(strWhere);
 			return DataTableToList(ds.Tables[0]);
@@ -92,13 +92,13 @@ namespace KiwiCrawler.BLL
 		/// <summary>
 		/// 获得数据列表
 		/// </summary>
-		public List<KiwiCrawler.Model.Extractionconfig_k> DataTableToList(DataTable dt)
+		public List<KiwiCrawler.Model.Extractioncontent_k> DataTableToList(DataTable dt)
 		{
-			List<KiwiCrawler.Model.Extractionconfig_k> modelList = new List<KiwiCrawler.Model.Extractionconfig_k>();
+			List<KiwiCrawler.Model.Extractioncontent_k> modelList = new List<KiwiCrawler.Model.Extractioncontent_k>();
 			int rowsCount = dt.Rows.Count;
 			if (rowsCount > 0)
 			{
-				KiwiCrawler.Model.Extractionconfig_k model;
+				KiwiCrawler.Model.Extractioncontent_k model;
 				for (int n = 0; n < rowsCount; n++)
 				{
 					model = dal.DataRowToModel(dt.Rows[n]);

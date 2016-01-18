@@ -642,28 +642,28 @@ private static void CustomParseLink_MainListTypeB(CustomParseLinkEvent3Args args
                 //获得锁定
                 //Kiwi-未测试的代码               
                 //处理上一个任务
-                var compalte_k = (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value.ToString().TrimEnd('%')) / 100;
-                if ((compalte_k >= 0.9m) && (compalte_k <= 1.0m))//先简单的这样控制一下。
+                //var compalte_k = (decimal?)Convert.ToDecimal(dgvTaskCapture.SelectedRows[0].Cells[8].Value.ToString().TrimEnd('%')) / 100;
+                //if ((compalte_k >= 0.9m) && (compalte_k <= 1.0m))//先简单的这样控制一下。
+                //{
+                //    MessageBox.Show("该任务抓取已经完成，请选择其他任务");
+                //}
+                //else
+                //{
+
+                //}
+                if (IsTaskOver())
                 {
-                    MessageBox.Show("该任务抓取已经完成，请选择其他任务");
+                    DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
+                    if (SettingCustomValues(0))
+                    {
+                        RunNewTask(e);
+                    }
+
                 }
                 else
                 {
-                    if (IsTaskOver())
-                    {
-                        DeWorkingState(dgvTaskCapture.Tag as DataGridViewCellEventArgs);
-                        if (SettingCustomValues(0))
-                        {
-                            RunNewTask(e);
-                        }
-
-                    }
-                    else
-                    {
-                        MessageBox.Show("抓取任务正在进行，请等待任务结束...");
-                    }
+                    MessageBox.Show("抓取任务正在进行，请等待任务结束...");
                 }
-
             }
 
         }
